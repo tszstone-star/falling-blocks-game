@@ -37,4 +37,4 @@ Use Node's built-in runner for pure logic tests. Keep DOM/Canvas concerns separa
 - Local browser at 375×812 and 320×568: board, touch controls, and pause/restart fit in the viewport; document width and height matched the viewport at both sizes.
 - Touch buttons were exercised in the local browser for movement, soft drop, rotation, and hard drop; no Console errors were observed.
 - The automated UI fixture verifies coarse-pointer devices start paused and can begin with the on-board start button.
-- Still required: play on a physical phone, especially checking long-press repeat/release, accidental input, browser chrome/safe areas, and restart confirmation. Publish after that review and any corrections.
+- Still required: play the updated GitHub Pages build on a physical phone, especially checking long-press repeat/release, accidental input, browser chrome/safe areas, and restart confirmation. Correct any issues and rerun validation before closing Phase 4.

@@ -50,4 +50,4 @@ The user completed the Phase 2 browser review on 2026-10-02 and accepted the res
 | Pause on coarse-pointer startup and when the page becomes hidden | Gives the player time to get ready and prevents unattended play after switching apps |
 | Confirm restart from touch devices | Reduces accidental loss of a phone game |
 
-Implementation is local and browser-viewport checked. Physical-phone acceptance and public publishing remain pending.
+Implementation is browser-viewport checked. Physical-phone acceptance remains pending.

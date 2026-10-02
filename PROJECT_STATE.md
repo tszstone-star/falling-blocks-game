@@ -10,4 +10,4 @@
 - **Phase 2 acceptance:** The user completed the browser review on 2026-10-02. UX and accessibility changes are recorded in `docs/TEST_PLAN.md`.
 - **Phase 3 public acceptance:** On 2026-10-02, the published page loaded its styling, ES module and Canvas; movement, soft drop, rotation, hard drop, pause/resume, restart and Next were exercised. A line clear produced score 100 and line count 1; High score 100 remained after refresh. At a 375px viewport, document width stayed 375px and the board remained 1:2. No Console errors were observed.
 - **Phase 4 progress:** Phone-first controls and portrait layout are implemented locally. Browser viewport checks at 375×812 and 320×568 fit without page overflow; `npm test` passes 19/19. Physical-phone play and public update remain pending.
-- **Next step:** Complete a real-phone play check, adjust any issues found, then publish the Phase 4 changes to the existing GitHub Pages site.
+- **Next step:** Complete a real-phone play check on the updated Pages site, adjust any issues found, and then close Phase 4.
