@@ -35,5 +35,5 @@ Use Node's built-in runner for pure logic tests. Keep DOM/Canvas concerns separa
 
 - `npm test`: 19/19 passed after the revised phone layout and touch-control order were added.
 - The user reviewed the first published phone layout on a physical phone. That review led to moving rotate to the right edge, putting hard drop in the former soft-drop position, removing the soft-drop touch button, and moving pause/restart to the top.
-- The revised layout is currently local. The automated UI fixture verifies the four touch actions and pause/resume labels; it does not verify browser pixels or responsive dimensions.
-- After publishing this revision, check 375×812 and 320×568 layouts and play the updated page on a physical phone. Confirm board/control fit, long-press release, rotate/drop placement, safe areas, and restart confirmation before closing Phase 4.
+- Commit `8e2cbd2` is published. The live page returns HTTP 200 and serves the new brand, cache version, touch-control order, and responsive stylesheet.
+- The automated UI fixture verifies the four touch actions and pause/resume labels; it does not verify browser pixels or responsive dimensions. Play the updated page on a physical phone and confirm board/control fit, long-press release, rotate/drop placement, safe areas, and restart confirmation before closing Phase 4.

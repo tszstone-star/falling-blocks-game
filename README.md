@@ -30,4 +30,4 @@ Published with GitHub Pages from the root of `main`: <https://tszstone-star.gith
 
 ## Current status
 
-Phase 1 gameplay and Canvas UI passed the user's independent browser play check on 2026-10-02. Phase 2 layout and accessibility polish also passed the user's browser review on 2026-10-02. Phase 3 deployment and public smoke acceptance completed on 2026-10-02. Phase 4 phone controls passed an initial physical-phone review; the revised layout is implemented locally and awaits review after publication. See `docs/TEST_PLAN.md` for details.
+Phase 1 gameplay and Canvas UI passed the user's independent browser play check on 2026-10-02. Phase 2 layout and accessibility polish also passed the user's browser review on 2026-10-02. Phase 3 deployment and public smoke acceptance completed on 2026-10-02. The revised Phase 4 phone layout is published for final physical-phone review; see `docs/TEST_PLAN.md` for details.
