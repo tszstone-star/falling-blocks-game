@@ -13,11 +13,12 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     setPointerCapture() {}, append(...children) { this.children.push(...children); }, replaceChildren(...children) { this.children = children; },
     focus() { this.focused = true; }, matches(selector) { return selector.startsWith('input') && this.tagName === 'INPUT'; },
   });
-  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'level-notice', 'score-entry', 'round-summary', 'score-form', 'player-name', 'save-score', 'score-message', 'leaderboard-list', 'game-over-restart', 'mobile-start', 'touch-controls', 'status-panel', 'pause-label', 'pause-mobile-label', 'pause-icon', 'music-toggle', 'music-icon', 'music-label', 'next-piece', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
+  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'level-notice', 'line-clear-notice', 'score-entry', 'round-summary', 'final-score', 'final-level', 'final-lines', 'final-play-time', 'final-tetris-count', 'score-form', 'player-name', 'save-score', 'score-message', 'leaderboard-list', 'game-over-restart', 'mobile-start', 'touch-controls', 'status-panel', 'pause-label', 'pause-mobile-label', 'pause-icon', 'music-toggle', 'music-icon', 'music-label', 'sound-toggle', 'sound-icon', 'sound-label', 'next-piece', 'hold-piece', 'hold-action', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
     elements.set(id, makeElement(id === 'player-name' ? 'INPUT' : id === 'score-form' ? 'FORM' : 'DIV'));
   }
   const element = id => elements.get(id);
-  const touchButtons = ['left', 'right', 'drop', 'rotate'].map(action => ({ handlers: {}, dataset: { action }, addEventListener(key, handler) { this.handlers[key] = handler; }, setPointerCapture() {} }));
+  const touchButtons = ['left', 'right', 'hold', 'drop', 'rotate'].map(action => ({ handlers: {}, dataset: { action }, addEventListener(key, handler) { this.handlers[key] = handler; }, setPointerCapture() {} }));
+  elements.set('hold-action', touchButtons.find(button => button.dataset.action === 'hold'));
   element('touch-controls').querySelectorAll = () => touchButtons;
   const original = { window: globalThis.window, document: globalThis.document, requestAnimationFrame: globalThis.requestAnimationFrame };
   const documentEvents = new Map();
@@ -43,11 +44,16 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     assert.equal(element('music-toggle').attributes['aria-pressed'], 'false');
     element('music-toggle').handlers.click();
     assert.equal(element('music-toggle').attributes['aria-pressed'], 'true');
+    element('sound-toggle').handlers.click();
+    assert.equal(element('sound-toggle').attributes['aria-pressed'], 'false');
+    element('sound-toggle').handlers.click();
+    assert.equal(element('sound-toggle').attributes['aria-pressed'], 'true');
     assert.match(element('game-status').textContent, /^Paused/);
     element('mobile-start').handlers.click();
     assert.equal(element('mobile-start').hidden, true);
     assert.match(element('game-status').textContent, /^Playing/);
     assert.match(element('next-piece').attributes['aria-label'], /^Next piece: [IOTSZJL]$/);
+    assert.match(element('hold-piece').attributes['aria-label'], /^Hold piece: empty$/);
     assert.equal(element('board-overlay').hidden, true);
     assert.match(element('playfield-description').textContent, /^Current [IOTSZJL] piece, row \d+, column \d+\. Next piece [IOTSZJL]\.$/);
     const columnBeforeTouch = Number(/column (\d+)/.exec(element('playfield-description').textContent)[1]);
@@ -59,13 +65,19 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     assert.ok(columnAfterHold <= columnBeforeTouch - 2, 'holding left repeats movement');
     await new Promise(resolve => setTimeout(resolve, 120));
     assert.equal(Number(/column (\d+)/.exec(element('playfield-description').textContent)[1]), columnAfterHold, 'release stops repeat movement');
-    pointer(touchButtons[2], 'pointerdown');
-    pointer(touchButtons[2], 'pointerup');
-    pointer(touchButtons[3], 'pointerdown');
-    pointer(touchButtons[3], 'pointerup');
+    const touchButton = action => touchButtons.find(button => button.dataset.action === action);
+    pointer(touchButton('hold'), 'pointerdown');
+    pointer(touchButton('hold'), 'pointerup');
+    assert.equal(element('hold-action').disabled, true);
+    assert.match(element('hold-piece').attributes['aria-label'], /^Hold piece: [IOTSZJL]$/);
+    pointer(touchButton('drop'), 'pointerdown');
+    pointer(touchButton('drop'), 'pointerup');
+    pointer(touchButton('rotate'), 'pointerdown');
+    pointer(touchButton('rotate'), 'pointerup');
     for (const id of ['score', 'lines', 'highScore']) assert.equal(Number(element(id).textContent), 0);
     assert.equal(Number(element('level').textContent), 1);
     for (const value of ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp']) key(value);
+    key('c');
     key('p');
     assert.match(element('game-status').textContent, /^Paused/);
     assert.equal(element('pause-mobile-label').textContent, '继续');
@@ -88,6 +100,8 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     assert.equal(element('board-frame').dataset.state, 'game-over');
     assert.equal(element('board-overlay').textContent, 'GAME OVER');
     assert.equal(element('score-entry').hidden, false);
+    assert.match(element('final-play-time').textContent, /^\d{2}:\d{2}$/);
+    assert.equal(element('final-score').textContent, String(element('score').textContent));
     assert.equal(element('pause').disabled, true);
     assert.equal(key('r', false, element('player-name')), false);
     assert.match(element('game-status').textContent, /^Game over/);
@@ -135,10 +149,15 @@ test('page markup and styles keep the accessible responsive MVP shell', () => {
   assert.match(html, /<h1>[\s\S]*Baozi Blocks/);
   assert.doesNotMatch(html, /BAOZI-\*\*FALLING BLOCKS/);
   assert.match(html, /<button type="button" data-action="drop"[\s\S]*<button type="button" data-action="rotate"/);
-  for (const action of ['left', 'right', 'rotate', 'drop']) assert.match(html, new RegExp(`data-action="${action}"`));
+  for (const action of ['left', 'right', 'hold', 'rotate', 'drop']) assert.match(html, new RegExp(`data-action="${action}"`));
+  assert.match(html, /id="hold-piece"/);
+  assert.match(html, /<kbd>C<\/kbd>[\s\S]*Hold piece/);
   assert.doesNotMatch(html, /data-action="down"/);
   assert.match(html, /id="mobile-start"/);
   assert.match(html, /id="music-toggle"[^>]*aria-pressed="true"/);
+  assert.match(html, /id="sound-toggle"[^>]*aria-pressed="true"/);
+  assert.match(html, /id="line-clear-notice"/);
+  assert.match(html, /id="final-play-time"/);
   assert.match(html, /id="score-entry"/);
   assert.match(html, /id="score-form"/);
   assert.match(html, /id="leaderboard-list"/);

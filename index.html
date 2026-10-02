@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Baozi Blocks</title>
-  <link rel="stylesheet" href="./css/style.css?v=phase5">
+  <link rel="stylesheet" href="./css/style.css?v=phase6">
 </head>
 <body>
   <main>
@@ -15,6 +15,7 @@
           <button id="pause" type="button" aria-keyshortcuts="P"><span id="pause-icon" class="mobile-action-icon" aria-hidden="true">Ⅱ</span><span id="pause-label" class="desktop-label">Pause</span><span id="pause-mobile-label" class="mobile-label">暂停</span> <kbd>P</kbd></button>
           <button id="restart" type="button" aria-keyshortcuts="R"><span class="mobile-action-icon" aria-hidden="true">↻</span><span class="desktop-label">Restart</span><span class="mobile-label">重开</span> <kbd>R</kbd></button>
           <button id="music-toggle" type="button" aria-pressed="true" aria-label="关闭背景音乐" title="关闭背景音乐"><span id="music-icon" class="mobile-action-icon" aria-hidden="true">♫</span><span id="music-label" class="desktop-label">Music on</span></button>
+          <button id="sound-toggle" type="button" aria-pressed="true" aria-label="关闭音效" title="关闭音效"><span id="sound-icon" class="mobile-action-icon" aria-hidden="true">◖))</span><span id="sound-label" class="desktop-label">Sound on</span></button>
         </div>
       </div>
       <p>Clear lines, build your score, and keep the stack low.</p>
@@ -27,9 +28,17 @@
           <p id="playfield-description" class="visually-hidden"></p>
           <div id="board-overlay" class="board-overlay" aria-hidden="true" hidden></div>
           <div id="level-notice" class="level-notice" aria-live="polite" hidden></div>
+          <div id="line-clear-notice" class="line-clear-notice" aria-live="polite" hidden></div>
           <section id="score-entry" class="score-entry" aria-labelledby="score-entry-heading" hidden>
             <h2 id="score-entry-heading">GAME OVER</h2>
-            <p id="round-summary" class="round-summary"></p>
+            <p id="round-summary" class="round-summary">本局成绩</p>
+            <dl class="final-stats" aria-label="本局统计">
+              <div><dt>得分</dt><dd id="final-score">0</dd></div>
+              <div><dt>等级</dt><dd id="final-level">1</dd></div>
+              <div><dt>消行</dt><dd id="final-lines">0</dd></div>
+              <div><dt>用时</dt><dd id="final-play-time">00:00</dd></div>
+              <div><dt>四消</dt><dd id="final-tetris-count">0</dd></div>
+            </dl>
             <form id="score-form">
               <label for="player-name">输入名字（最多 10 个字）</label>
               <div class="score-form-row">
@@ -59,6 +68,10 @@
             <div class="stat stat-lines"><dt><span class="desktop-label">Lines</span><span class="mobile-label">消行</span></dt><dd id="lines">0</dd></div>
             <div class="stat stat-high-score"><dt><span class="desktop-label">High score</span><span class="mobile-label">最高分</span></dt><dd id="highScore">0</dd></div>
           </dl>
+          <section class="hold-panel" aria-labelledby="hold-heading">
+            <h2 id="hold-heading"><span class="desktop-label">Hold</span><span class="mobile-label">暂存</span></h2>
+            <canvas id="hold-piece" role="img" aria-label="Hold piece: empty"></canvas>
+          </section>
           <section class="next-panel" aria-labelledby="next-heading">
             <div>
               <h2 id="next-heading"><span class="desktop-label">Next piece</span><span class="mobile-label">下一个</span></h2>
@@ -70,6 +83,7 @@
         <section id="touch-controls" class="touch-controls" aria-label="Touch game controls">
           <button type="button" data-action="left" aria-label="向左移动"><span aria-hidden="true">←</span><small>左移</small></button>
           <button type="button" data-action="right" aria-label="向右移动"><span aria-hidden="true">→</span><small>右移</small></button>
+          <button id="hold-action" type="button" data-action="hold" aria-label="暂存方块"><span aria-hidden="true">H</span><small>暂存</small></button>
           <button type="button" data-action="drop" aria-label="直接落底"><span aria-hidden="true">⇊</span><small>落底</small></button>
           <button type="button" data-action="rotate" aria-label="顺时针旋转"><span aria-hidden="true">↻</span><small>旋转</small></button>
         </section>
@@ -81,6 +95,7 @@
             <li><span><kbd>↓</kbd></span><span>Soft drop</span></li>
             <li><span><kbd>↑</kbd></span><span>Rotate clockwise</span></li>
             <li><span><kbd>Space</kbd></span><span>Hard drop</span></li>
+            <li><span><kbd>C</kbd></span><span>Hold piece</span></li>
             <li><span><kbd>P</kbd></span><span>Pause / resume</span></li>
             <li><span><kbd>R</kbd></span><span>Restart</span></li>
           </ul>
@@ -89,6 +104,6 @@
     </div>
     <noscript><p class="noscript-message">JavaScript is required to play.</p></noscript>
   </main>
-  <script type="module" src="./src/main.js?v=phase5"></script>
+  <script type="module" src="./src/main.js?v=phase6"></script>
 </body>
 </html>

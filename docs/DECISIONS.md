@@ -63,3 +63,18 @@ The latest phone layout is published in commit `014ed694`. The user reviewed the
 | Use the exact title `Baozi Blocks` | Keep the phone header short and consistent with the browser tab title |
 
 The approved behavior is implemented. See `PHASE5_PLAN.md` for the original proposal and `TEST_PLAN.md` for checks and remaining physical-phone acceptance.
+
+## Phase 6 — approved 2026-10-03
+
+| Decision | Reason / behavior |
+| --- | --- |
+| Level comes from lines: `1 + floor(lines / 10)` | Separates progression from score and avoids score-multiplier feedback loops |
+| Fixed line-clear scores: 100/300/500/800 | Rewards clear quality consistently at every level |
+| Gravity is `max(100, round(800 / 1.06^(level - 1)))` ms | Gradual exponential speed growth with a 100 ms floor |
+| Use localStorage key `baozi-blocks-high-score-v2` | Keep score scales separate without deleting legacy data |
+| Ghost projection, 500 ms Lock Delay, at most eight resets, once-per-piece Hold | Improve landing visibility and last-moment placement choices with bounded timing rules |
+| Clockwise SRS with JLSTZ/I kick tables; O unchanged | Standardize wall/floor rotation while keeping controls simple |
+| Synthesize quiet effects with Web Audio and separate Music/Sound controls | Keep the game self-contained and let phone players control each channel |
+| Track active Play Time and four-line clears for the current round only | Show arcade-style results without persisting additional personal data |
+
+Implementation and automated coverage are recorded in `docs/TEST_PLAN.md`; after publication the user should review touch feel and speaker volume on-device.

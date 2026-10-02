@@ -1,4 +1,4 @@
-const KEY = 'falling-blocks-high-score';
+const KEY = 'baozi-blocks-high-score-v2';
 export function loadHighScore(storage) {
   try {
     const value = Number(storage.getItem(KEY));

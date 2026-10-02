@@ -57,3 +57,18 @@ Phase 1 gameplay, automated validation and the user's independent browser play a
 - Game over shows the round score and level, a name field, and a top-three list. Names are trimmed and limited to 10 Unicode code points. One name occupies at most one place, keeping its best score. Existing scores retain priority in ties. The name board lasts for the page session and clears after refresh; the existing numeric high score remains stored separately.
 - A short, quiet electronic loop is synthesized with Web Audio. It starts on player interaction, has a header toggle, stops while paused, hidden, or game over, and resumes after play resumes if enabled. Music tempo does not change with the game level.
 - Public release is browser checked; final audio volume and phone keyboard behavior await the user's physical-phone review.
+
+## Phase 6 — core feel and Difficulty Model V2
+
+- **Progress:** Level is `1 + floor(cumulative lines / 10)`. The 1/2/3/4-line clear scores are fixed at 100/300/500/800, independent of level. Score does not affect level.
+- **Gravity:** The interval is `max(100 ms, round(800 ms / 1.06^(level - 1)))`; each newly spawned piece starts with a fresh gravity interval.
+- **High score:** V2 reads and writes `baozi-blocks-high-score-v2`. The legacy key remains intact, but is not migrated or compared.
+- **Ghost:** A translucent projection shows the current piece's lowest valid placement. It derives from the current board and piece and does not mutate game state.
+- **Lock Delay:** A grounded piece waits 500 ms before gravity/soft-drop locking. Valid grounded left/right/clockwise rotation resets the delay at most eight times. Hard drop locks immediately. Pause freezes gravity and the delay.
+- **Hold:** The player may hold once per active piece. An empty hold promotes Next and draws a replacement Next; later swaps do not consume the bag. Locking re-enables Hold. The keyboard shortcut is C and a phone control is provided.
+- **Rotation:** Clockwise SRS uses JLSTZ and I kick tables; O is unchanged. Counter-clockwise, 180-degree rotation and T-Spin scoring remain excluded.
+- **Feedback:** Web Audio synthesizes quiet lock, line-clear, Tetris, level-up and game-over effects. Music and effects have separate header toggles. Line clears flash briefly; level-up notice lasts 900 ms.
+- **Round statistics:** Game Over shows Score, Level, Lines, active Play Time and Tetris count. Time excludes pause and time after the game ends. Statistics reset on restart and do not persist.
+- **Phone layout:** Hold and Next share the compact dashboard row; five touch actions fit below the board without displacing the board's priority.
+
+This phase intentionally replaces the Phase 5 rules `Level = 1 + floor(score / 20000)`, level-based score multipliers and 5% gravity growth.

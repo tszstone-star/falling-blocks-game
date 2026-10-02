@@ -45,3 +45,13 @@ Use Node's built-in runner for pure logic tests. Keep DOM/Canvas concerns separa
 - At 375×667, the game-over name field, leaderboard and restart action fit inside the board panel, with the four touch controls visible below. Submitting a name keeps it through restart; reloading and reaching game over shows the empty-board message.
 - Release commit `26dbeba3fea0c1e338863d792b4f5440915ef062` was independently verified on GitHub. The public Pages site returned HTTP 200 and displayed `Baozi Blocks`, music control, the score-entry panel and the four mobile controls. The short-height 375×400 view expanded the name panel to the viewport; no browser console errors were observed.
 - The viewport check does not emulate a real phone's on-screen keyboard or speakers. User review on the two phones should confirm name entry with the keyboard open, music loudness/tone, toggle, pause/resume, and backgrounding behavior.
+
+## Phase 6 — core feel and Difficulty Model V2
+
+Automated coverage includes line-based levels, fixed clear scoring, the 6% gravity curve and 100 ms floor; isolated V2 high-score storage; Ghost projection and hard-drop alignment; 500 ms Lock Delay, eight resets, pause, ledge movement and Hold interaction; empty/swap/once-per-piece Hold; JLSTZ/I SRS transitions and O behavior; sound scheduling/toggle; active Play Time, pause exclusion, Tetris count, restart and time formatting. Run `npm test` before release.
+
+Browser acceptance checks 390×844 and 375×667: no horizontal overflow; board and five touch actions fit together; Hold/Next remain legible; header audio toggles fit; line/level feedback stays brief; and Game Over statistics, name entry and top three remain usable. Exercise keyboard C/Space/arrows, phone Hold, pause/resume, restart, sound and music independently, and verify refresh clears the name board while V2 high score remains.
+
+Local browser checks passed at 390×844 and 375×667, with the five-control row at the bottom and no visible horizontal overflow. At 390×844 the board occupied about 318×637 px; at 375×667 it occupied about 231×461 px, with the controls ending 8 px above the viewport edge. The Hold control populated its preview and disabled itself until the active piece locked. Repeated hard drops opened the Game Over panel with all five statistics, name entry, top-three area and replay action visible within the 375×667 board overlay. A 1280×900 desktop view also showed the Hold/Next panels and both audio controls.
+
+Physical-phone acceptance is still needed for speaker loudness, touch comfort and on-screen keyboard behavior; viewport checks do not emulate these device properties.

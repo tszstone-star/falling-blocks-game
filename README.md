@@ -1,4 +1,4 @@
-# BAOZI-FALLING BLOCKS
+# Baozi Blocks
 
 A simple browser-based falling-block game, built with HTML, CSS, and vanilla JavaScript. This project also validates the first real Codex Bridge development workflow.
 
@@ -12,7 +12,7 @@ python3 -m http.server 8765 --bind 127.0.0.1
 
 Open `http://127.0.0.1:8765`. No dependency installation is required. Direct `file://` opening may block ES modules.
 
-On a phone, use the on-screen controls to move left/right, drop the piece, or rotate clockwise. Holding left/right repeats. On a keyboard, use ←/→ to move, ↓ to soft drop, ↑ to rotate, Space to hard drop, P to pause/resume, and R to restart. High score is saved locally when storage is available. Leaving the page pauses the game.
+On a phone, use the on-screen controls to move left/right, hold a piece, hard drop, or rotate clockwise. Holding left/right repeats. On a keyboard, use ←/→ to move, ↓ to soft drop, ↑ to rotate, Space to hard drop, C to hold, P to pause/resume, and R to restart. Music and sound effects have separate controls. High score is saved locally when storage is available. Leaving the page pauses the game.
 
 ## Tests
 
@@ -30,4 +30,4 @@ Published with GitHub Pages from the root of `main`: <https://tszstone-star.gith
 
 ## Current status
 
-Phases 1–4 are complete, including public deployment and the user's phone-play acceptance on 2026-10-02. Phase 5 is published in commit `26dbeba3fea0c1e338863d792b4f5440915ef062`: it adds score-based difficulty, a three-place board that lasts until refresh, synthesized background music, and the `Baozi Blocks` title. Automated and responsive browser checks passed; the user's real-phone music and play review is the remaining acceptance step. See `docs/PHASE5_PLAN.md` and `docs/TEST_PLAN.md`.
+Phases 1–5 are complete, including public deployment and the user's phone-play acceptance on 2026-10-02. Phase 6 replaces score-based levels with line-based levels, fixed line-clear scores and 6% gravity growth; it adds Ghost, Lock Delay, Hold, SRS, synthesized sound effects and per-round statistics. V2 high score uses its own local storage key. See `PROJECT_STATE.md` and `docs/TEST_PLAN.md` for implementation and verification status.

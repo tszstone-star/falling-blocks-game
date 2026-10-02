@@ -1,20 +1,24 @@
 import { createGame, act, advance } from './game/game.js';
 import { normalizePlayerName, submitScore } from './game/leaderboard.js';
-import { createRenderer } from './ui/renderer.js?v=phase5';
+import { createRenderer } from './ui/renderer.js?v=phase6';
 import { loadHighScore, saveHighScore } from './ui/storage.js';
 import { createMusic } from './ui/music.js';
+import { createSoundEffects } from './ui/sound.js';
 let storage;
 try { storage = window.localStorage; } catch { /* Storage may be disabled. */ }
 let state = createGame(loadHighScore(storage));
 let leaderboard = [];
 let scoreMessage = '';
 const music = createMusic(window);
+const sound = createSoundEffects(window);
 const touchDevice = typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
 if (touchDevice) state = act(state, 'pause');
 const render = createRenderer(document);
+function renderCurrent() { render(state, leaderboard, scoreMessage, music.isEnabled(), sound.isEnabled()); }
 function update(next) {
   const enteredGameOver = !state.gameOver && next.gameOver;
   if (next.highScore > state.highScore) saveHighScore(storage, next.highScore);
+  if (next.eventId !== state.eventId) for (const event of next.events) sound.play(event);
   if (enteredGameOver) {
     document.getElementById('player-name').value = '';
     document.getElementById('player-name').disabled = false;
@@ -24,20 +28,22 @@ function update(next) {
   state = next;
   if (state.paused || state.gameOver) music.stop();
   if (!state.paused) mobileStart.hidden = true;
-  render(state, leaderboard, scoreMessage, music.isEnabled());
+  renderCurrent();
   if (enteredGameOver && !touchDevice) document.getElementById('player-name').focus();
 }
 const mobileStart = document.getElementById('mobile-start');
 mobileStart.hidden = !touchDevice;
 mobileStart.addEventListener('click', () => {
+  sound.unlock();
   if (state.paused && !state.gameOver) update(act(state, 'pause'));
   mobileStart.hidden = true;
   if (!state.paused && !state.gameOver) music.start();
 });
 
-const controls = { ArrowLeft: 'left', ArrowRight: 'right', ArrowDown: 'down', ArrowUp: 'rotate', ' ': 'drop', p: 'pause', r: 'restart' };
+const controls = { ArrowLeft: 'left', ArrowRight: 'right', ArrowDown: 'down', ArrowUp: 'rotate', ' ': 'drop', c: 'hold', p: 'pause', r: 'restart' };
 function restartGame() {
   if (touchDevice && typeof window.confirm === 'function' && !window.confirm('要重新开始这一局吗？')) return;
+  sound.unlock();
   update(act(state, 'restart'));
   if (!state.paused && !state.gameOver) music.start();
 }
@@ -50,23 +56,31 @@ window.addEventListener('keydown', event => {
   if (event.repeat && ['pause', 'restart', 'drop', 'rotate'].includes(action)) return;
   if (action === 'restart') restartGame();
   else {
+    sound.unlock();
     update(act(state, action));
     if (!state.paused && !state.gameOver) music.start();
   }
 });
 document.getElementById('pause').addEventListener('click', () => {
+  sound.unlock();
   update(act(state, 'pause'));
   if (!state.paused && !state.gameOver) music.start();
 });
 document.getElementById('restart').addEventListener('click', restartGame);
 document.getElementById('game-over-restart').addEventListener('click', () => {
+  sound.unlock();
   update(act(state, 'restart'));
   music.start();
 });
 document.getElementById('music-toggle').addEventListener('click', () => {
   const enabled = music.setEnabled(!music.isEnabled());
-  render(state, leaderboard, scoreMessage, enabled);
+  renderCurrent();
   if (enabled && !state.paused && !state.gameOver) music.start();
+});
+document.getElementById('sound-toggle').addEventListener('click', () => {
+  sound.unlock();
+  sound.setEnabled(!sound.isEnabled());
+  renderCurrent();
 });
 document.getElementById('score-form').addEventListener('submit', event => {
   event.preventDefault();
@@ -75,7 +89,7 @@ document.getElementById('score-form').addEventListener('submit', event => {
   const name = normalizePlayerName(nameInput.value);
   if (!name) {
     scoreMessage = '请输入名字，或选择再来一局。';
-    render(state, leaderboard, scoreMessage, music.isEnabled());
+    renderCurrent();
     return;
   }
   nameInput.value = name;
@@ -88,7 +102,7 @@ document.getElementById('score-form').addEventListener('submit', event => {
       : '本局分数未进入前三。';
   document.getElementById('player-name').disabled = true;
   document.getElementById('save-score').disabled = true;
-  render(state, leaderboard, scoreMessage, music.isEnabled());
+  renderCurrent();
 });
 
 let activePress;
@@ -110,6 +124,7 @@ for (const button of touchControls.querySelectorAll('[data-action]')) {
     activePress = { pointerId: event.pointerId, button, timeout: undefined, interval: undefined };
     button.dataset.pressed = 'true';
     if (event.pointerId !== undefined) button.setPointerCapture?.(event.pointerId);
+    sound.unlock();
     update(act(state, action));
     if (!state.paused && !state.gameOver) music.start();
     if (['left', 'right', 'down'].includes(action)) {
@@ -139,5 +154,5 @@ function frame(now) {
   previous = now;
   requestAnimationFrame(frame);
 }
-render(state, leaderboard, scoreMessage, music.isEnabled());
+renderCurrent();
 requestAnimationFrame(frame);

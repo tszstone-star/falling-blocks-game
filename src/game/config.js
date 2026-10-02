@@ -1,7 +1,9 @@
 export const BOARD_COLUMNS = 10;
 export const BOARD_VISIBLE_ROWS = 20;
 export const CELL_SIZE_PX = 30;
-export const LEVEL_SCORE_STEP = 20000;
+export const LINES_PER_LEVEL = 10;
 export const START_GRAVITY_INTERVAL_MS = 800;
-export const LEVEL_SPEED_MULTIPLIER = 1.05;
+export const LEVEL_SPEED_MULTIPLIER = 1.06;
 export const MIN_GRAVITY_INTERVAL_MS = 100;
+export const LOCK_DELAY_MS = 500;
+export const MAX_LOCK_RESETS = 8;
