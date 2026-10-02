@@ -33,8 +33,7 @@ Use Node's built-in runner for pure logic tests. Keep DOM/Canvas concerns separa
 
 ## Phase 4 phone-play checks — in progress
 
-- `npm test`: 19/19 passed after adding coarse-pointer startup, touch-button pointer events, pause/resume, and hidden-page pause coverage.
-- Local browser at 375×812 and 320×568: board, touch controls, and pause/restart fit in the viewport; document width and height matched the viewport at both sizes.
-- Touch buttons were exercised in the local browser for movement, soft drop, rotation, and hard drop; no Console errors were observed.
-- The automated UI fixture verifies coarse-pointer devices start paused and can begin with the on-board start button.
-- Still required: play the updated GitHub Pages build on a physical phone, especially checking long-press repeat/release, accidental input, browser chrome/safe areas, and restart confirmation. Correct any issues and rerun validation before closing Phase 4.
+- `npm test`: 19/19 passed after the revised phone layout and touch-control order were added.
+- The user reviewed the first published phone layout on a physical phone. That review led to moving rotate to the right edge, putting hard drop in the former soft-drop position, removing the soft-drop touch button, and moving pause/restart to the top.
+- The revised layout is currently local. The automated UI fixture verifies the four touch actions and pause/resume labels; it does not verify browser pixels or responsive dimensions.
+- After publishing this revision, check 375×812 and 320×568 layouts and play the updated page on a physical phone. Confirm board/control fit, long-press release, rotate/drop placement, safe areas, and restart confirmation before closing Phase 4.

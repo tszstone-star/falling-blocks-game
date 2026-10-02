@@ -6,7 +6,7 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
   const elements = new Map();
   const events = new Map();
   const frames = [];
-  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'mobile-start', 'touch-controls', 'status-panel', 'pause-label', 'pause-mobile-label', 'next-piece', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
+  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'mobile-start', 'touch-controls', 'status-panel', 'pause-label', 'pause-mobile-label', 'pause-icon', 'next-piece', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
     const context = { draws: [], fillRect(...args) { this.draws.push(args); }, strokeRect() {}, clearRect() {} };
     elements.set(id, { textContent: '', context, attributes: {}, handlers: {}, dataset: {}, hidden: false, disabled: false,
       getContext: () => context,
@@ -16,7 +16,7 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     });
   }
   const element = id => elements.get(id);
-  const touchButtons = ['left', 'right', 'rotate', 'down', 'drop'].map(action => ({ handlers: {}, dataset: { action }, addEventListener(key, handler) { this.handlers[key] = handler; }, setPointerCapture() {} }));
+  const touchButtons = ['left', 'right', 'drop', 'rotate'].map(action => ({ handlers: {}, dataset: { action }, addEventListener(key, handler) { this.handlers[key] = handler; }, setPointerCapture() {} }));
   element('touch-controls').querySelectorAll = () => touchButtons;
   const original = { window: globalThis.window, document: globalThis.document, requestAnimationFrame: globalThis.requestAnimationFrame };
   const documentEvents = new Map();
@@ -51,16 +51,17 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     assert.ok(columnAfterHold <= columnBeforeTouch - 2, 'holding left repeats movement');
     await new Promise(resolve => setTimeout(resolve, 120));
     assert.equal(Number(/column (\d+)/.exec(element('playfield-description').textContent)[1]), columnAfterHold, 'release stops repeat movement');
+    pointer(touchButtons[2], 'pointerdown');
+    pointer(touchButtons[2], 'pointerup');
     pointer(touchButtons[3], 'pointerdown');
     pointer(touchButtons[3], 'pointerup');
-    pointer(touchButtons[4], 'pointerdown');
-    pointer(touchButtons[4], 'pointerup');
     for (const id of ['score', 'lines', 'highScore']) assert.equal(Number(element(id).textContent), 0);
     assert.equal(Number(element('level').textContent), 1);
     for (const value of ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp']) key(value);
     key('p');
     assert.match(element('game-status').textContent, /^Paused/);
     assert.equal(element('pause-mobile-label').textContent, '继续');
+    assert.equal(element('pause-icon').textContent, '▶');
     assert.equal(element('status-panel').dataset.state, 'paused');
     assert.equal(element('board-frame').dataset.state, 'paused');
     assert.equal(element('board-overlay').textContent, 'PAUSED');
@@ -71,6 +72,7 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     assert.match(element('game-status').textContent, /^Paused/);
     element('pause').handlers.click();
     assert.match(element('game-status').textContent, /^Playing/);
+    assert.equal(element('pause-icon').textContent, 'Ⅱ');
     // Repeated center drops must eventually obstruct the spawn, regardless of bag order.
     for (let i = 0; i < 40 && !element('pause').disabled; i++) key(' ');
     assert.match(element('game-status').textContent, /^Game over/);
@@ -108,14 +110,18 @@ test('page markup and styles keep the accessible responsive MVP shell', () => {
   assert.ok(stats, 'statistics use a description list');
   assert.equal((stats.match(/<dt>/g) ?? []).length, 4);
   assert.equal((stats.match(/<dd\b/g) ?? []).length, 4);
-  for (const label of ['Score', 'Level', 'Lines', 'High score']) assert.ok(stats.includes(`<dt>${label}</dt>`));
+  for (const label of ['Score', 'Level', 'Lines', 'High score']) assert.ok(stats.includes(`<span class="desktop-label">${label}</span>`));
   assert.match(html, /aria-keyshortcuts="P"/);
   assert.match(html, /aria-keyshortcuts="R"/);
   assert.match(html, /id="touch-controls"/);
-  for (const action of ['left', 'right', 'rotate', 'down', 'drop']) assert.match(html, new RegExp(`data-action="${action}"`));
+  assert.match(html, /<title>BAOZI-\*\*FALLING BLOCKS<\/title>/);
+  assert.match(html, /<h1>[\s\S]*BAOZI-\*\*FALLING BLOCKS/);
+  assert.match(html, /<button type="button" data-action="drop"[\s\S]*<button type="button" data-action="rotate"/);
+  for (const action of ['left', 'right', 'rotate', 'drop']) assert.match(html, new RegExp(`data-action="${action}"`));
+  assert.doesNotMatch(html, /data-action="down"/);
   assert.match(html, /id="mobile-start"/);
   assert.match(css, /touch-action:\s*none/);
-  assert.match(css, /height:\s*86px/);
+  assert.match(css, /height:\s*68px/);
   assert.match(html, /<kbd>Space<\/kbd>/);
   assert.match(css, /aspect-ratio:\s*1\s*\/\s*2/);
   assert.match(css, /@media\s*\(max-width:\s*620px\)/);

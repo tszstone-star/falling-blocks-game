@@ -43,8 +43,9 @@ Phase 1 gameplay, automated validation and the user's independent browser play a
 
 ## Phase 4 phone controls
 
-- Narrow-screen portrait layout keeps statistics and Next above the board, with touch controls and pause/restart below it.
-- Touch controls move left/right, rotate clockwise, soft drop, and hard drop. Holding left/right/down repeats; rotate and hard drop act once per press.
-- Coarse-pointer devices start paused until the player taps the board. Leaving the page pauses play; restarting from a touch device asks for confirmation.
+- Narrow-screen portrait layout shows score, lines, level, and Next above a larger board.
+- Touch controls appear below the board in this order: left, right, hard drop, rotate. Soft drop remains available on the keyboard.
+- Pause/resume and restart sit in the top bar as compact actions. Restart from a touch device asks for confirmation.
+- Coarse-pointer devices start paused until the player taps the board. Leaving the page pauses play.
 - Keyboard controls remain available. No game rules, dependencies, accounts, or server features are added.
 - Physical-phone acceptance is still required before Phase 4 is complete.

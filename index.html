@@ -3,13 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Falling Blocks Game</title>
-  <link rel="stylesheet" href="./css/style.css?v=phone-controls-2">
+  <title>BAOZI-**FALLING BLOCKS</title>
+  <link rel="stylesheet" href="./css/style.css?v=phone-layout-3">
 </head>
 <body>
   <main>
     <header class="page-header">
-      <h1>Falling Blocks</h1>
+      <div class="page-header-row">
+        <h1><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>BAOZI-**FALLING BLOCKS</span></h1>
+        <div class="buttons" aria-label="Game actions">
+          <button id="pause" type="button" aria-keyshortcuts="P"><span id="pause-icon" class="mobile-action-icon" aria-hidden="true">Ⅱ</span><span id="pause-label" class="desktop-label">Pause</span><span id="pause-mobile-label" class="mobile-label">暂停</span> <kbd>P</kbd></button>
+          <button id="restart" type="button" aria-keyshortcuts="R"><span class="mobile-action-icon" aria-hidden="true">↻</span><span class="desktop-label">Restart</span><span class="mobile-label">重开</span> <kbd>R</kbd></button>
+        </div>
+      </div>
       <p>Clear lines, build your score, and keep the stack low.</p>
     </header>
     <div class="game-layout">
@@ -29,29 +35,24 @@
         </section>
         <div class="mobile-dashboard">
           <dl class="stats" aria-label="Game statistics">
-            <div class="stat stat-score"><dt>Score</dt><dd id="score">0</dd></div>
-            <div class="stat stat-level"><dt>Level</dt><dd id="level">1</dd></div>
-            <div class="stat stat-lines"><dt>Lines</dt><dd id="lines">0</dd></div>
-            <div class="stat stat-high-score"><dt>High score</dt><dd id="highScore">0</dd></div>
+            <div class="stat stat-score"><dt><span class="desktop-label">Score</span><span class="mobile-label">得分</span></dt><dd id="score">0</dd></div>
+            <div class="stat stat-level"><dt><span class="desktop-label">Level</span><span class="mobile-label">等级</span></dt><dd id="level">1</dd></div>
+            <div class="stat stat-lines"><dt><span class="desktop-label">Lines</span><span class="mobile-label">消行</span></dt><dd id="lines">0</dd></div>
+            <div class="stat stat-high-score"><dt><span class="desktop-label">High score</span><span class="mobile-label">最高分</span></dt><dd id="highScore">0</dd></div>
           </dl>
           <section class="next-panel" aria-labelledby="next-heading">
             <div>
-              <h2 id="next-heading">Next piece</h2>
+              <h2 id="next-heading"><span class="desktop-label">Next piece</span><span class="mobile-label">下一个</span></h2>
               <p>Coming up</p>
             </div>
             <canvas id="next-piece" role="img" aria-label="Next piece preview"></canvas>
           </section>
         </div>
-        <div class="buttons" aria-label="Game actions">
-          <button id="pause" type="button" aria-keyshortcuts="P"><span id="pause-label" class="desktop-label">Pause</span><span id="pause-mobile-label" class="mobile-label">暂停</span> <kbd>P</kbd></button>
-          <button id="restart" type="button" aria-keyshortcuts="R"><span class="desktop-label">Restart</span><span class="mobile-label">重开</span> <kbd>R</kbd></button>
-        </div>
         <section id="touch-controls" class="touch-controls" aria-label="Touch game controls">
           <button type="button" data-action="left" aria-label="向左移动"><span aria-hidden="true">←</span><small>左移</small></button>
           <button type="button" data-action="right" aria-label="向右移动"><span aria-hidden="true">→</span><small>右移</small></button>
-          <button type="button" data-action="rotate" aria-label="顺时针旋转"><span aria-hidden="true">↻</span><small>旋转</small></button>
-          <button type="button" data-action="down" aria-label="缓慢下落"><span aria-hidden="true">↓</span><small>慢降</small></button>
           <button type="button" data-action="drop" aria-label="直接落底"><span aria-hidden="true">⇊</span><small>落底</small></button>
+          <button type="button" data-action="rotate" aria-label="顺时针旋转"><span aria-hidden="true">↻</span><small>旋转</small></button>
         </section>
         <section class="controls-panel" aria-labelledby="controls-heading">
           <h2 id="controls-heading">Keyboard controls</h2>
@@ -69,6 +70,6 @@
     </div>
     <noscript><p class="noscript-message">JavaScript is required to play.</p></noscript>
   </main>
-  <script type="module" src="./src/main.js?v=phone-controls-2"></script>
+  <script type="module" src="./src/main.js?v=phone-layout-3"></script>
 </body>
 </html>

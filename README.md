@@ -1,4 +1,4 @@
-# Falling Blocks Game
+# BAOZI-**FALLING BLOCKS
 
 A simple browser-based falling-block game, built with HTML, CSS, and vanilla JavaScript. This project also validates the first real Codex Bridge development workflow.
 
@@ -12,7 +12,7 @@ python3 -m http.server 8765 --bind 127.0.0.1
 
 Open `http://127.0.0.1:8765`. No dependency installation is required. Direct `file://` opening may block ES modules.
 
-Use the on-screen controls on a phone, or ←/→ to move, ↓ to soft drop, ↑ to rotate clockwise, Space to hard drop, P to pause/resume, and R to restart on a keyboard. Holding left/right/down repeats on touch. High score is saved locally when storage is available. Leaving the page pauses the game.
+On a phone, use the on-screen controls to move left/right, drop the piece, or rotate clockwise. Holding left/right repeats. On a keyboard, use ←/→ to move, ↓ to soft drop, ↑ to rotate, Space to hard drop, P to pause/resume, and R to restart. High score is saved locally when storage is available. Leaving the page pauses the game.
 
 ## Tests
 
@@ -30,4 +30,4 @@ Published with GitHub Pages from the root of `main`: <https://tszstone-star.gith
 
 ## Current status
 
-Phase 1 gameplay and Canvas UI passed the user's independent browser play check on 2026-10-02. Phase 2 layout and accessibility polish also passed the user's browser review on 2026-10-02. Phase 3 deployment and public smoke acceptance completed on 2026-10-02. Phase 4 phone controls and portrait layout are published for physical-phone review; see `PROJECT_STATE.md` and `docs/TEST_PLAN.md` for details.
+Phase 1 gameplay and Canvas UI passed the user's independent browser play check on 2026-10-02. Phase 2 layout and accessibility polish also passed the user's browser review on 2026-10-02. Phase 3 deployment and public smoke acceptance completed on 2026-10-02. Phase 4 phone controls passed an initial physical-phone review; the revised layout is implemented locally and awaits review after publication. See `docs/TEST_PLAN.md` for details.

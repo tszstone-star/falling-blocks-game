@@ -10,4 +10,4 @@
 
 Phase 0 is complete. Phase 1 was accepted after the user's independent real-browser play check on 2026-10-02. Phase 2 is complete: its clarity, layout, control feedback and accessibility changes passed the user's browser review on 2026-10-02. Phase 3 is complete: GitHub Pages publishes the root of `main` at https://tszstone-star.github.io/falling-blocks-game/; public acceptance results are recorded in `TEST_PLAN.md`.
 
-Phase 4 is in progress with the user's approval. Touch controls, coarse-pointer tap-to-start, restart confirmation, visibility-loss pause, and compact portrait layout are implemented and pass local checks. Physical-phone acceptance remains pending.
+Phase 4 is in progress with the user's approval. Touch controls, coarse-pointer tap-to-start, restart confirmation, visibility-loss pause, and the revised portrait layout are implemented locally; `npm test` passes. The user reviewed the first version on a physical phone and approved the revised direction. Final phone acceptance of this revision remains pending publication.

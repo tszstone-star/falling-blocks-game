@@ -57,6 +57,7 @@ export function createRenderer(root) {
     const pauseButton = root.getElementById('pause');
     root.getElementById('pause-label').textContent = state.paused ? 'Resume' : 'Pause';
     root.getElementById('pause-mobile-label').textContent = state.paused ? '继续' : '暂停';
+    root.getElementById('pause-icon').textContent = state.paused ? '▶' : 'Ⅱ';
     pauseButton.disabled = state.gameOver;
   };
 }
