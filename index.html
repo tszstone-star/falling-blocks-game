@@ -19,6 +19,7 @@
           <canvas id="game-board" role="img" aria-label="Falling blocks playfield, 10 columns by 20 rows" aria-describedby="playfield-description game-status control-help">Canvas support is required to play.</canvas>
           <p id="playfield-description" class="visually-hidden"></p>
           <div id="board-overlay" class="board-overlay" aria-hidden="true" hidden></div>
+          <button id="mobile-start" class="mobile-start" type="button" hidden>点击开始</button>
         </div>
       </section>
       <aside class="sidebar" aria-label="Game information and controls">
@@ -26,26 +27,35 @@
           <span class="eyebrow">STATUS</span>
           <p id="game-status" data-state="playing" role="status" aria-live="polite" aria-atomic="true">Loading game…</p>
         </section>
-        <dl class="stats" aria-label="Game statistics">
-          <div class="stat stat-score"><dt>Score</dt><dd id="score">0</dd></div>
-          <div class="stat stat-level"><dt>Level</dt><dd id="level">1</dd></div>
-          <div class="stat stat-lines"><dt>Lines</dt><dd id="lines">0</dd></div>
-          <div class="stat stat-high-score"><dt>High score</dt><dd id="highScore">0</dd></div>
-        </dl>
-        <section class="next-panel" aria-labelledby="next-heading">
-          <div>
-            <h2 id="next-heading">Next piece</h2>
-            <p>Coming up</p>
-          </div>
-          <canvas id="next-piece" role="img" aria-label="Next piece preview"></canvas>
-        </section>
-        <div class="buttons" aria-label="Game actions">
-          <button id="pause" type="button" aria-keyshortcuts="P"><span id="pause-label">Pause</span> <kbd>P</kbd></button>
-          <button id="restart" type="button" aria-keyshortcuts="R"><span>Restart</span> <kbd>R</kbd></button>
+        <div class="mobile-dashboard">
+          <dl class="stats" aria-label="Game statistics">
+            <div class="stat stat-score"><dt>Score</dt><dd id="score">0</dd></div>
+            <div class="stat stat-level"><dt>Level</dt><dd id="level">1</dd></div>
+            <div class="stat stat-lines"><dt>Lines</dt><dd id="lines">0</dd></div>
+            <div class="stat stat-high-score"><dt>High score</dt><dd id="highScore">0</dd></div>
+          </dl>
+          <section class="next-panel" aria-labelledby="next-heading">
+            <div>
+              <h2 id="next-heading">Next piece</h2>
+              <p>Coming up</p>
+            </div>
+            <canvas id="next-piece" role="img" aria-label="Next piece preview"></canvas>
+          </section>
         </div>
+        <div class="buttons" aria-label="Game actions">
+          <button id="pause" type="button" aria-keyshortcuts="P"><span id="pause-label" class="desktop-label">Pause</span><span id="pause-mobile-label" class="mobile-label">暂停</span> <kbd>P</kbd></button>
+          <button id="restart" type="button" aria-keyshortcuts="R"><span class="desktop-label">Restart</span><span class="mobile-label">重开</span> <kbd>R</kbd></button>
+        </div>
+        <section id="touch-controls" class="touch-controls" aria-label="Touch game controls">
+          <button type="button" data-action="left" aria-label="向左移动"><span aria-hidden="true">←</span><small>左移</small></button>
+          <button type="button" data-action="right" aria-label="向右移动"><span aria-hidden="true">→</span><small>右移</small></button>
+          <button type="button" data-action="rotate" aria-label="顺时针旋转"><span aria-hidden="true">↻</span><small>旋转</small></button>
+          <button type="button" data-action="down" aria-label="缓慢下落"><span aria-hidden="true">↓</span><small>慢降</small></button>
+          <button type="button" data-action="drop" aria-label="直接落底"><span aria-hidden="true">⇊</span><small>落底</small></button>
+        </section>
         <section class="controls-panel" aria-labelledby="controls-heading">
           <h2 id="controls-heading">Keyboard controls</h2>
-          <p id="control-help" class="controls-intro">Shortcuts work while the game page is active.</p>
+          <p id="control-help" class="controls-intro">Use on-screen controls or keyboard shortcuts while the game page is active.</p>
           <ul class="controls-list">
             <li><span><kbd>←</kbd> <kbd>→</kbd></span><span>Move</span></li>
             <li><span><kbd>↓</kbd></span><span>Soft drop</span></li>

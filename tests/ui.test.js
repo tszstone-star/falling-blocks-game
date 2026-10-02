@@ -2,23 +2,28 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-test('entry wires Canvas, keyboard, pause/restart, game over and unavailable storage', async () => {
+test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and unavailable storage', async () => {
   const elements = new Map();
   const events = new Map();
   const frames = [];
-  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'status-panel', 'pause-label', 'next-piece', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
+  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'mobile-start', 'touch-controls', 'status-panel', 'pause-label', 'pause-mobile-label', 'next-piece', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
     const context = { draws: [], fillRect(...args) { this.draws.push(args); }, strokeRect() {}, clearRect() {} };
     elements.set(id, { textContent: '', context, attributes: {}, handlers: {}, dataset: {}, hidden: false, disabled: false,
       getContext: () => context,
       setAttribute(key, value) { this.attributes[key] = value; },
       addEventListener(key, handler) { this.handlers[key] = handler; },
+      setPointerCapture() {},
     });
   }
-  const original = { window: globalThis.window, document: globalThis.document, requestAnimationFrame: globalThis.requestAnimationFrame };
-  globalThis.window = { get localStorage() { throw new Error('Storage denied'); }, addEventListener: (key, handler) => events.set(key, handler) };
-  globalThis.document = { getElementById: id => elements.get(id) };
-  globalThis.requestAnimationFrame = callback => frames.push(callback);
   const element = id => elements.get(id);
+  const touchButtons = ['left', 'right', 'rotate', 'down', 'drop'].map(action => ({ handlers: {}, dataset: { action }, addEventListener(key, handler) { this.handlers[key] = handler; }, setPointerCapture() {} }));
+  element('touch-controls').querySelectorAll = () => touchButtons;
+  const original = { window: globalThis.window, document: globalThis.document, requestAnimationFrame: globalThis.requestAnimationFrame };
+  const documentEvents = new Map();
+  let allowRestart = true;
+  globalThis.window = { get localStorage() { throw new Error('Storage denied'); }, matchMedia: () => ({ matches: true }), confirm: () => allowRestart, addEventListener: (key, handler) => events.set(key, handler) };
+  globalThis.document = { visibilityState: 'visible', getElementById: id => elements.get(id), addEventListener: (key, handler) => documentEvents.set(key, handler) };
+  globalThis.requestAnimationFrame = callback => frames.push(callback);
   function key(value, repeat = false) {
     let prevented = false;
     events.get('keydown')({ key: value, repeat, preventDefault() { prevented = true; } });
@@ -29,15 +34,33 @@ test('entry wires Canvas, keyboard, pause/restart, game over and unavailable sto
     assert.equal(element('game-board').width, 300);
     assert.equal(element('game-board').height, 600);
     assert.ok(element('game-board').context.draws.length >= 5);
-    assert.match(element('next-piece').attributes['aria-label'], /^Next piece: [IOTSZJL]$/);
+    assert.equal(element('mobile-start').hidden, false);
+    assert.match(element('game-status').textContent, /^Paused/);
+    element('mobile-start').handlers.click();
+    assert.equal(element('mobile-start').hidden, true);
     assert.match(element('game-status').textContent, /^Playing/);
+    assert.match(element('next-piece').attributes['aria-label'], /^Next piece: [IOTSZJL]$/);
     assert.equal(element('board-overlay').hidden, true);
     assert.match(element('playfield-description').textContent, /^Current [IOTSZJL] piece, row \d+, column \d+\. Next piece [IOTSZJL]\.$/);
+    const columnBeforeTouch = Number(/column (\d+)/.exec(element('playfield-description').textContent)[1]);
+    const pointer = (button, eventName) => button.handlers[eventName]({ pointerId: 1, button: 0, preventDefault() {} });
+    pointer(touchButtons[0], 'pointerdown');
+    await new Promise(resolve => setTimeout(resolve, 330));
+    pointer(touchButtons[0], 'pointerup');
+    const columnAfterHold = Number(/column (\d+)/.exec(element('playfield-description').textContent)[1]);
+    assert.ok(columnAfterHold <= columnBeforeTouch - 2, 'holding left repeats movement');
+    await new Promise(resolve => setTimeout(resolve, 120));
+    assert.equal(Number(/column (\d+)/.exec(element('playfield-description').textContent)[1]), columnAfterHold, 'release stops repeat movement');
+    pointer(touchButtons[3], 'pointerdown');
+    pointer(touchButtons[3], 'pointerup');
+    pointer(touchButtons[4], 'pointerdown');
+    pointer(touchButtons[4], 'pointerup');
     for (const id of ['score', 'lines', 'highScore']) assert.equal(Number(element(id).textContent), 0);
     assert.equal(Number(element('level').textContent), 1);
     for (const value of ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp']) key(value);
     key('p');
     assert.match(element('game-status').textContent, /^Paused/);
+    assert.equal(element('pause-mobile-label').textContent, '继续');
     assert.equal(element('status-panel').dataset.state, 'paused');
     assert.equal(element('board-frame').dataset.state, 'paused');
     assert.equal(element('board-overlay').textContent, 'PAUSED');
@@ -55,6 +78,10 @@ test('entry wires Canvas, keyboard, pause/restart, game over and unavailable sto
     assert.equal(element('board-frame').dataset.state, 'game-over');
     assert.equal(element('board-overlay').textContent, 'GAME OVER');
     assert.equal(element('pause').disabled, true);
+    allowRestart = false;
+    key('r');
+    assert.match(element('game-status').textContent, /^Game over/);
+    allowRestart = true;
     key('R');
     assert.match(element('game-status').textContent, /^Playing/);
     assert.equal(element('pause').disabled, false);
@@ -62,6 +89,9 @@ test('entry wires Canvas, keyboard, pause/restart, game over and unavailable sto
     assert.match(element('game-status').textContent, /^Paused/);
     element('restart').handlers.click();
     assert.match(element('game-status').textContent, /^Playing/);
+    globalThis.document.visibilityState = 'hidden';
+    documentEvents.get('visibilitychange')();
+    assert.match(element('game-status').textContent, /^Paused/);
   } finally {
     for (const [key, value] of Object.entries(original)) {
       if (value === undefined) delete globalThis[key]; else globalThis[key] = value;
@@ -81,6 +111,11 @@ test('page markup and styles keep the accessible responsive MVP shell', () => {
   for (const label of ['Score', 'Level', 'Lines', 'High score']) assert.ok(stats.includes(`<dt>${label}</dt>`));
   assert.match(html, /aria-keyshortcuts="P"/);
   assert.match(html, /aria-keyshortcuts="R"/);
+  assert.match(html, /id="touch-controls"/);
+  for (const action of ['left', 'right', 'rotate', 'down', 'drop']) assert.match(html, new RegExp(`data-action="${action}"`));
+  assert.match(html, /id="mobile-start"/);
+  assert.match(css, /touch-action:\s*none/);
+  assert.match(css, /height:\s*86px/);
   assert.match(html, /<kbd>Space<\/kbd>/);
   assert.match(css, /aspect-ratio:\s*1\s*\/\s*2/);
   assert.match(css, /@media\s*\(max-width:\s*620px\)/);

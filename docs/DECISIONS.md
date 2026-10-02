@@ -4,12 +4,12 @@
 | --- | --- |
 | HTML, CSS, vanilla JavaScript ES modules; Canvas gameplay | Implemented in Phase 1; dependency-free static application |
 | No third-party dependencies | Keep setup, maintenance, and deployment minimal; Node's built-in test runner is sufficient |
-| GitHub Pages deployment target | Static hosting fits the application; deployment is planned for Phase 3 |
+| GitHub Pages deployment | Static hosting fits the application; published from `main` root at https://tszstone-star.github.io/falling-blocks-game/ |
 | `localStorage` for local high score | Implemented with guarded reads/writes and in-memory fallback |
 | Separate game logic and UI | Pure rules can be tested independently of rendering |
 | Codex Bridge workflow validation | This project serves as the first real Codex Bridge development workflow validation; scaffold creation alone does not establish full end-to-end workflow validation |
 | Scaffold-only Phase 0 | Historical initialization scope; Phase 1 now implements gameplay |
-| Local Git repository without a commit | Initialization is requested; committing is reserved for explicit authorization |
+| Git baseline | Commit `2e3551f0cdcc2379b711b2e5d8e13c94dea45352` was created and pushed after explicit authorization; future commits still require explicit authorization under `AGENTS.md` |
 
 ## Phase 1 V0.1 — 2026-10-02
 
@@ -40,3 +40,14 @@ The initial browser automation attempt was blocked by browser security policy. T
 | No new gameplay systems, animation, sound, theme controls or touch input | Preserve the accepted Phase 1 scope |
 
 The user completed the Phase 2 browser review on 2026-10-02 and accepted the result. Phase 2 is complete; its review did not change the gameplay scope.
+
+## Phase 4 — 2026-10-02
+
+| Decision | Reason / behavior |
+| --- | --- |
+| Prioritize phone portrait play | The user expects to play mainly on a phone; keep the full board and controls visible together on common short screens |
+| Add pointer-based left/right/soft-drop holds and single-press rotate/hard-drop | Supports touch without changing pure game rules or adding dependencies |
+| Pause on coarse-pointer startup and when the page becomes hidden | Gives the player time to get ready and prevents unattended play after switching apps |
+| Confirm restart from touch devices | Reduces accidental loss of a phone game |
+
+Implementation is local and browser-viewport checked. Physical-phone acceptance and public publishing remain pending.

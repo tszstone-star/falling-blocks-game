@@ -40,3 +40,11 @@ No login, backend, database, multiplayer, ads, payments, server leaderboard, or 
 ## Current implementation
 
 Phase 1 gameplay, automated validation and the user's independent browser play acceptance are complete. Phase 2 improves clarity, layout, control feedback and accessibility without changing V0.1 gameplay rules or adding systems. The user passed the Phase 2 browser review on 2026-10-02; Phase 2 is complete.
+
+## Phase 4 phone controls
+
+- Narrow-screen portrait layout keeps statistics and Next above the board, with touch controls and pause/restart below it.
+- Touch controls move left/right, rotate clockwise, soft drop, and hard drop. Holding left/right/down repeats; rotate and hard drop act once per press.
+- Coarse-pointer devices start paused until the player taps the board. Leaving the page pauses play; restarting from a touch device asks for confirmation.
+- Keyboard controls remain available. No game rules, dependencies, accounts, or server features are added.
+- Physical-phone acceptance is still required before Phase 4 is complete.

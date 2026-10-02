@@ -56,6 +56,7 @@ export function createRenderer(root) {
     boardOverlay.hidden = mode === 'playing';
     const pauseButton = root.getElementById('pause');
     root.getElementById('pause-label').textContent = state.paused ? 'Resume' : 'Pause';
+    root.getElementById('pause-mobile-label').textContent = state.paused ? '继续' : '暂停';
     pauseButton.disabled = state.gameOver;
   };
 }

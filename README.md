@@ -12,7 +12,7 @@ python3 -m http.server 8765 --bind 127.0.0.1
 
 Open `http://127.0.0.1:8765`. No dependency installation is required. Direct `file://` opening may block ES modules.
 
-Use ←/→ to move, ↓ to soft drop, ↑ to rotate clockwise, Space to hard drop, P to pause/resume, and R to restart. High score is saved locally when storage is available. Focus loss pauses the game.
+Use the on-screen controls on a phone, or ←/→ to move, ↓ to soft drop, ↑ to rotate clockwise, Space to hard drop, P to pause/resume, and R to restart on a keyboard. Holding left/right/down repeats on touch. High score is saved locally when storage is available. Leaving the page pauses the game.
 
 ## Tests
 
@@ -26,8 +26,8 @@ Tests use Node's built-in test runner. There are no third-party dependencies.
 
 ## Deployment
 
-GitHub Pages is the intended static hosting target in Phase 3. Deployment has not been configured. Relative asset paths support deployment under a repository subpath.
+Published with GitHub Pages from the root of `main`: <https://tszstone-star.github.io/falling-blocks-game/>. HTTPS is enforced. Relative asset paths support deployment under this repository subpath.
 
 ## Current status
 
-Phase 1 gameplay and Canvas UI passed the user's independent browser play check on 2026-10-02. Phase 2 layout and accessibility polish also passed the user's browser review on 2026-10-02. The first Git baseline is on `main`; GitHub Pages has not been configured.
+Phase 1 gameplay and Canvas UI passed the user's independent browser play check on 2026-10-02. Phase 2 layout and accessibility polish also passed the user's browser review on 2026-10-02. Phase 3 deployment and public smoke acceptance completed on 2026-10-02; see `PROJECT_STATE.md` and `docs/TEST_PLAN.md` for details.
