@@ -1,4 +1,4 @@
-# BAOZI-**FALLING BLOCKS
+# BAOZI-FALLING BLOCKS
 
 A simple browser-based falling-block game, built with HTML, CSS, and vanilla JavaScript. This project also validates the first real Codex Bridge development workflow.
 

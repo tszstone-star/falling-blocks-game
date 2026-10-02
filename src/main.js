@@ -1,5 +1,5 @@
 import { createGame, act, advance } from './game/game.js';
-import { createRenderer } from './ui/renderer.js?v=phone-layout-3';
+import { createRenderer } from './ui/renderer.js?v=phone-layout-4';
 import { loadHighScore, saveHighScore } from './ui/storage.js';
 let storage;
 try { storage = window.localStorage; } catch { /* Storage may be disabled. */ }

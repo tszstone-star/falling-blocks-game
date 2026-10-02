@@ -114,8 +114,9 @@ test('page markup and styles keep the accessible responsive MVP shell', () => {
   assert.match(html, /aria-keyshortcuts="P"/);
   assert.match(html, /aria-keyshortcuts="R"/);
   assert.match(html, /id="touch-controls"/);
-  assert.match(html, /<title>BAOZI-\*\*FALLING BLOCKS<\/title>/);
-  assert.match(html, /<h1>[\s\S]*BAOZI-\*\*FALLING BLOCKS/);
+  assert.match(html, /<title>BAOZI-FALLING BLOCKS<\/title>/);
+  assert.match(html, /<h1>[\s\S]*BAOZI-FALLING BLOCKS/);
+  assert.doesNotMatch(html, /BAOZI-\*\*FALLING BLOCKS/);
   assert.match(html, /<button type="button" data-action="drop"[\s\S]*<button type="button" data-action="rotate"/);
   for (const action of ['left', 'right', 'rotate', 'drop']) assert.match(html, new RegExp(`data-action="${action}"`));
   assert.doesNotMatch(html, /data-action="down"/);
@@ -125,6 +126,12 @@ test('page markup and styles keep the accessible responsive MVP shell', () => {
   assert.match(html, /<kbd>Space<\/kbd>/);
   assert.match(css, /aspect-ratio:\s*1\s*\/\s*2/);
   assert.match(css, /@media\s*\(max-width:\s*620px\)/);
+  assert.match(css, /height:\s*100dvh/);
+  assert.match(css, /main\s*\{[^}]*flex:\s*1/);
+  assert.match(css, /\.playfield-column\s*\{[^}]*flex:\s*1/);
+  assert.match(css, /\.stat\s*\{[^}]*padding:\s*5px 6px/);
+  assert.match(css, /\.board-frame\s*\{[^}]*340px/);
+  assert.match(css, /\.touch-controls\s*\{\s*order:\s*3/);
   assert.match(css, /button:focus-visible/);
   assert.match(css, /prefers-reduced-motion/);
 });
