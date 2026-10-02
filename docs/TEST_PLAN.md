@@ -43,4 +43,5 @@ Use Node's built-in runner for pure logic tests. Keep DOM/Canvas concerns separa
 
 - `npm test`: 28/28 passed on 2026-10-03. Coverage includes score thresholds and gravity scaling, scoring across a threshold, leaderboard ordering/name rules, music scheduling and stop behavior, keyboard input protection, and game-over entry.
 - At 375×667, the game-over name field, leaderboard and restart action fit inside the board panel, with the four touch controls visible below. Submitting a name keeps it through restart; reloading and reaching game over shows the empty-board message.
+- Release commit `26dbeba3fea0c1e338863d792b4f5440915ef062` was independently verified on GitHub. The public Pages site returned HTTP 200 and displayed `Baozi Blocks`, music control, the score-entry panel and the four mobile controls. The short-height 375×400 view expanded the name panel to the viewport; no browser console errors were observed.
 - The viewport check does not emulate a real phone's on-screen keyboard or speakers. User review on the two phones should confirm name entry with the keyboard open, music loudness/tone, toggle, pause/resume, and backgrounding behavior.
