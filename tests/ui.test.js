@@ -6,14 +6,15 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
   const elements = new Map();
   const events = new Map();
   const frames = [];
-  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'mobile-start', 'touch-controls', 'status-panel', 'pause-label', 'pause-mobile-label', 'pause-icon', 'next-piece', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
-    const context = { draws: [], fillRect(...args) { this.draws.push(args); }, strokeRect() {}, clearRect() {} };
-    elements.set(id, { textContent: '', context, attributes: {}, handlers: {}, dataset: {}, hidden: false, disabled: false,
-      getContext: () => context,
-      setAttribute(key, value) { this.attributes[key] = value; },
-      addEventListener(key, handler) { this.handlers[key] = handler; },
-      setPointerCapture() {},
-    });
+  const makeElement = tagName => ({ tagName, textContent: '', context: { draws: [], fillRect(...args) { this.draws.push(args); }, strokeRect() {}, clearRect() {} }, attributes: {}, handlers: {}, dataset: {}, children: [], hidden: false, disabled: false,
+    getContext() { return this.context; },
+    setAttribute(key, value) { this.attributes[key] = value; },
+    addEventListener(key, handler) { this.handlers[key] = handler; },
+    setPointerCapture() {}, append(...children) { this.children.push(...children); }, replaceChildren(...children) { this.children = children; },
+    focus() { this.focused = true; }, matches(selector) { return selector.startsWith('input') && this.tagName === 'INPUT'; },
+  });
+  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'level-notice', 'score-entry', 'round-summary', 'score-form', 'player-name', 'save-score', 'score-message', 'leaderboard-list', 'game-over-restart', 'mobile-start', 'touch-controls', 'status-panel', 'pause-label', 'pause-mobile-label', 'pause-icon', 'music-toggle', 'music-icon', 'music-label', 'next-piece', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
+    elements.set(id, makeElement(id === 'player-name' ? 'INPUT' : id === 'score-form' ? 'FORM' : 'DIV'));
   }
   const element = id => elements.get(id);
   const touchButtons = ['left', 'right', 'drop', 'rotate'].map(action => ({ handlers: {}, dataset: { action }, addEventListener(key, handler) { this.handlers[key] = handler; }, setPointerCapture() {} }));
@@ -22,12 +23,14 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
   const documentEvents = new Map();
   let allowRestart = true;
   globalThis.window = { get localStorage() { throw new Error('Storage denied'); }, matchMedia: () => ({ matches: true }), confirm: () => allowRestart, addEventListener: (key, handler) => events.set(key, handler) };
-  globalThis.document = { visibilityState: 'visible', getElementById: id => elements.get(id), addEventListener: (key, handler) => documentEvents.set(key, handler) };
+  globalThis.document = { visibilityState: 'visible', getElementById: id => elements.get(id), createElement: tag => makeElement(tag.toUpperCase()), addEventListener: (key, handler) => documentEvents.set(key, handler) };
   globalThis.requestAnimationFrame = callback => frames.push(callback);
-  function key(value, repeat = false) {
+  function key(value, repeat = false, target) {
     let prevented = false;
-    events.get('keydown')({ key: value, repeat, preventDefault() { prevented = true; } });
-    assert.equal(prevented, true);
+    events.get('keydown')({ key: value, repeat, target, preventDefault() { prevented = true; } });
+    if (target) assert.equal(prevented, false, 'name entry keeps game shortcuts from consuming typed characters');
+    else assert.equal(prevented, true);
+    return prevented;
   }
   try {
     await import('../src/main.js');
@@ -35,6 +38,11 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     assert.equal(element('game-board').height, 600);
     assert.ok(element('game-board').context.draws.length >= 5);
     assert.equal(element('mobile-start').hidden, false);
+    assert.equal(element('music-toggle').attributes['aria-pressed'], 'true');
+    element('music-toggle').handlers.click();
+    assert.equal(element('music-toggle').attributes['aria-pressed'], 'false');
+    element('music-toggle').handlers.click();
+    assert.equal(element('music-toggle').attributes['aria-pressed'], 'true');
     assert.match(element('game-status').textContent, /^Paused/);
     element('mobile-start').handlers.click();
     assert.equal(element('mobile-start').hidden, true);
@@ -79,7 +87,16 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     assert.equal(element('status-panel').dataset.state, 'game-over');
     assert.equal(element('board-frame').dataset.state, 'game-over');
     assert.equal(element('board-overlay').textContent, 'GAME OVER');
+    assert.equal(element('score-entry').hidden, false);
     assert.equal(element('pause').disabled, true);
+    assert.equal(key('r', false, element('player-name')), false);
+    assert.match(element('game-status').textContent, /^Game over/);
+    element('player-name').value = 'Baozi';
+    element('score-form').handlers.submit({ preventDefault() {} });
+    assert.equal(element('leaderboard-list').children.length, 1);
+    assert.equal(element('leaderboard-list').children[0].children[0].textContent, 'Baozi');
+    assert.equal(element('leaderboard-list').children[0].children[1].textContent, '0');
+    assert.match(element('score-message').textContent, /第 1 名/);
     allowRestart = false;
     key('r');
     assert.match(element('game-status').textContent, /^Game over/);
@@ -114,15 +131,20 @@ test('page markup and styles keep the accessible responsive MVP shell', () => {
   assert.match(html, /aria-keyshortcuts="P"/);
   assert.match(html, /aria-keyshortcuts="R"/);
   assert.match(html, /id="touch-controls"/);
-  assert.match(html, /<title>BAOZI-FALLING BLOCKS<\/title>/);
-  assert.match(html, /<h1>[\s\S]*BAOZI-FALLING BLOCKS/);
+  assert.match(html, /<title>Baozi Blocks<\/title>/);
+  assert.match(html, /<h1>[\s\S]*Baozi Blocks/);
   assert.doesNotMatch(html, /BAOZI-\*\*FALLING BLOCKS/);
   assert.match(html, /<button type="button" data-action="drop"[\s\S]*<button type="button" data-action="rotate"/);
   for (const action of ['left', 'right', 'rotate', 'drop']) assert.match(html, new RegExp(`data-action="${action}"`));
   assert.doesNotMatch(html, /data-action="down"/);
   assert.match(html, /id="mobile-start"/);
+  assert.match(html, /id="music-toggle"[^>]*aria-pressed="true"/);
+  assert.match(html, /id="score-entry"/);
+  assert.match(html, /id="score-form"/);
+  assert.match(html, /id="leaderboard-list"/);
   assert.match(css, /touch-action:\s*none/);
   assert.match(css, /height:\s*68px/);
+  assert.match(css, /max-height:\s*520px[\s\S]*\.board-frame\[data-state="game-over"\] \.score-entry \{ position:\s*fixed/);
   assert.match(html, /<kbd>Space<\/kbd>/);
   assert.match(css, /aspect-ratio:\s*1\s*\/\s*2/);
   assert.match(css, /@media\s*\(max-width:\s*620px\)/);

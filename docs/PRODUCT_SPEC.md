@@ -48,4 +48,12 @@ Phase 1 gameplay, automated validation and the user's independent browser play a
 - Pause/resume and restart sit in the top bar as compact actions. Restart from a touch device asks for confirmation.
 - Coarse-pointer devices start paused until the player taps the board. Leaving the page pauses play.
 - Keyboard controls remain available. No game rules, dependencies, accounts, or server features are added.
-- Physical-phone acceptance is still required before Phase 4 is complete.
+- The user reviewed the game on two phones and confirmed Phase 4 is settled on 2026-10-02; Phase 4 is complete.
+
+## Phase 5 — Baozi Blocks
+
+- Page title and visible game name are `Baozi Blocks`.
+- A game begins at level 1. Every 20,000 points raises the level by one. Gravity becomes 5% faster per level, starting at 800 ms per cell and bottoming out at 100 ms. Existing line-clear points are awarded using the level before that clear; the resulting total score sets the new level.
+- Game over shows the round score and level, a name field, and a top-three list. Names are trimmed and limited to 10 Unicode code points. One name occupies at most one place, keeping its best score. Existing scores retain priority in ties. The name board lasts for the page session and clears after refresh; the existing numeric high score remains stored separately.
+- A short, quiet electronic loop is synthesized with Web Audio. It starts on player interaction, has a header toggle, stops while paused, hidden, or game over, and resumes after play resumes if enabled. Music tempo does not change with the game level.
+- Public release is browser checked; final audio volume and phone keyboard behavior await the user's physical-phone review.

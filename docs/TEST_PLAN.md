@@ -31,9 +31,16 @@ These checks establish a public smoke acceptance for Phase 3. They do not replac
 
 Use Node's built-in runner for pure logic tests. Keep DOM/Canvas concerns separate from game rules. No test dependencies are planned.
 
-## Phase 4 phone-play checks — in progress
+## Phase 4 phone-play checks — accepted 2026-10-02
 
 - `npm test`: 19/19 passed after the revised phone layout and touch-control order were added.
 - The user reviewed the first published phone layout on a physical phone. That review led to moving rotate to the right edge, putting hard drop in the former soft-drop position, removing the soft-drop touch button, and moving pause/restart to the top.
-- Commit `8e2cbd2` is published. The live page returns HTTP 200 and serves the new brand, cache version, touch-control order, and responsive stylesheet.
-- The automated UI fixture verifies the four touch actions and pause/resume labels; it does not verify browser pixels or responsive dimensions. Play the updated page on a physical phone and confirm board/control fit, long-press release, rotate/drop placement, safe areas, and restart confirmation before closing Phase 4.
+- Latest program commit `014ed694` is published. The live page returns HTTP 200 and serves the title without stars, cache version `phone-layout-4`, touch-control order, framed stats and responsive stylesheet.
+- The latest published-page checks at 390×844 show a 319×638 board and touch controls ending at y=836; at 375×667 the board is approximately 231×461 and controls end at y=659. Both leave 8px below the controls. No Console errors were observed. These are browser viewport checks rather than device audio or safe-area emulation.
+- The automated UI fixture verifies the four touch actions and pause/resume labels; it does not verify browser pixels or responsive dimensions. The user reviewed the game on two phones and confirmed Phase 4 is settled on 2026-10-02, closing Phase 4 acceptance.
+
+## Phase 5 — published, physical-phone review pending
+
+- `npm test`: 28/28 passed on 2026-10-03. Coverage includes score thresholds and gravity scaling, scoring across a threshold, leaderboard ordering/name rules, music scheduling and stop behavior, keyboard input protection, and game-over entry.
+- At 375×667, the game-over name field, leaderboard and restart action fit inside the board panel, with the four touch controls visible below. Submitting a name keeps it through restart; reloading and reaching game over shows the empty-board message.
+- The viewport check does not emulate a real phone's on-screen keyboard or speakers. User review on the two phones should confirm name entry with the keyboard open, music loudness/tone, toggle, pause/resume, and backgrounding behavior.

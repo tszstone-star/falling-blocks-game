@@ -9,13 +9,22 @@ export function createRenderer(root) {
   const canvas = root.getElementById('game-board');
   const boardFrame = root.getElementById('board-frame');
   const boardOverlay = root.getElementById('board-overlay');
+  const scoreEntry = root.getElementById('score-entry');
+  const leaderboardList = root.getElementById('leaderboard-list');
+  const scoreMessage = root.getElementById('score-message');
+  const musicToggle = root.getElementById('music-toggle');
+  let displayedEntries;
+  let displayedLevel = 1;
+  let levelNoticeUntil = 0;
   canvas.width = BOARD_COLUMNS * CELL_SIZE_PX;
   canvas.height = BOARD_VISIBLE_ROWS * CELL_SIZE_PX;
   const context = canvas.getContext('2d');
   const preview = root.getElementById('next-piece');
   preview.width = preview.height = 120;
   const nextContext = preview.getContext('2d');
-  return state => {
+  return (state, entries = [], entryMessage = '', musicEnabled = true) => {
+    if (state.level > displayedLevel) levelNoticeUntil = Date.now() + 1300;
+    displayedLevel = state.level;
     const mode = state.gameOver ? 'game-over' : state.paused ? 'paused' : 'playing';
     context.fillStyle = '#020617';
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -54,6 +63,33 @@ export function createRenderer(root) {
     boardFrame.dataset.state = mode;
     boardOverlay.textContent = mode === 'game-over' ? 'GAME OVER' : 'PAUSED';
     boardOverlay.hidden = mode === 'playing';
+    const levelNotice = root.getElementById('level-notice');
+    levelNotice.hidden = Date.now() >= levelNoticeUntil || state.paused || state.gameOver;
+    if (!levelNotice.hidden) levelNotice.textContent = `LEVEL UP · ${state.level}`;
+    scoreEntry.hidden = !state.gameOver;
+    root.getElementById('round-summary').textContent = `本局得分 ${state.score} · 达到等级 ${state.level}`;
+    const entriesKey = JSON.stringify(entries);
+    if (entriesKey !== displayedEntries) {
+      const rows = entries.length
+        ? entries.map(({ name, score }) => {
+          const row = root.createElement('li');
+          const player = root.createElement('span');
+          const points = root.createElement('strong');
+          player.textContent = name;
+          points.textContent = String(score);
+          row.append(player, points);
+          return row;
+        })
+        : [Object.assign(root.createElement('li'), { textContent: '还没有成绩，来创造纪录。' })];
+      leaderboardList.replaceChildren(...rows);
+      displayedEntries = entriesKey;
+    }
+    if (scoreMessage.textContent !== entryMessage) scoreMessage.textContent = entryMessage;
+    musicToggle.setAttribute('aria-pressed', String(musicEnabled));
+    musicToggle.setAttribute('aria-label', musicEnabled ? '关闭背景音乐' : '开启背景音乐');
+    musicToggle.setAttribute('title', musicEnabled ? '关闭背景音乐' : '开启背景音乐');
+    root.getElementById('music-icon').textContent = musicEnabled ? '♫' : '♪';
+    root.getElementById('music-label').textContent = musicEnabled ? 'Music on' : 'Music off';
     const pauseButton = root.getElementById('pause');
     root.getElementById('pause-label').textContent = state.paused ? 'Resume' : 'Pause';
     root.getElementById('pause-mobile-label').textContent = state.paused ? '继续' : '暂停';

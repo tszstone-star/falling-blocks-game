@@ -30,4 +30,4 @@ Published with GitHub Pages from the root of `main`: <https://tszstone-star.gith
 
 ## Current status
 
-Phase 1 gameplay and Canvas UI passed the user's independent browser play check on 2026-10-02. Phase 2 layout and accessibility polish also passed the user's browser review on 2026-10-02. Phase 3 deployment and public smoke acceptance completed on 2026-10-02. The revised Phase 4 phone layout is published for final physical-phone review; see `docs/TEST_PLAN.md` for details.
+Phases 1–4 are complete, including public deployment and the user's phone-play acceptance on 2026-10-02. Phase 5 is published: it adds score-based difficulty, a three-place board that lasts until refresh, synthesized background music, and the `Baozi Blocks` title. Automated and responsive browser checks passed; the user's real-phone music and play review is the remaining acceptance step. See `docs/PHASE5_PLAN.md` and `docs/TEST_PLAN.md`.

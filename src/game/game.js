@@ -1,8 +1,9 @@
 import { createBoard, canPlace, placePiece, clearLines } from './board.js';
 import { createBag, spawnPiece, rotatePiece, WALL_KICKS } from './pieces.js';
+import { LEVEL_SCORE_STEP, START_GRAVITY_INTERVAL_MS, LEVEL_SPEED_MULTIPLIER, MIN_GRAVITY_INTERVAL_MS } from './config.js';
 
-export const levelForLines = lines => 1 + Math.floor(lines / 10);
-export const gravityInterval = level => Math.max(100, 800 - (level - 1) * 60);
+export const levelForScore = score => 1 + Math.floor(score / LEVEL_SCORE_STEP);
+export const gravityInterval = level => Math.max(MIN_GRAVITY_INTERVAL_MS, Math.round(START_GRAVITY_INTERVAL_MS / LEVEL_SPEED_MULTIPLIER ** (level - 1)));
 export const lineScore = (count, level) => [0, 100, 300, 500, 800][count] * level;
 
 function takePiece(state, random) {
@@ -22,10 +23,11 @@ function lock(state, random) {
   const cleared = clearLines(placePiece(state.board, state.current));
   const score = state.score + lineScore(cleared.count, state.level);
   const lines = state.lines + cleared.count;
+  const level = levelForScore(score);
   const current = spawnPiece(state.next);
   const next = takePiece(state, random);
   return { ...state, board: cleared.board, current, next: next.type, bag: next.bag,
-    score, lines, level: levelForLines(lines), highScore: Math.max(state.highScore, score),
+    score, lines, level, highScore: Math.max(state.highScore, score),
     gameOver: !canPlace(cleared.board, current), elapsed: 0 };
 }
 

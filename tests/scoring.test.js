@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createGame, act, advance, lineScore, levelForLines, gravityInterval } from '../src/game/game.js';
+import { createGame, act, advance, lineScore, levelForScore, gravityInterval } from '../src/game/game.js';
 import { spawnPiece, rotatePiece, createBag, PIECE_TYPES } from '../src/game/pieces.js';
 
 for (const [count,points] of [[1,100],[2,300],[3,500],[4,800]]) {
@@ -12,15 +12,26 @@ for (const [count,points] of [[1,100],[2,300],[3,500],[4,800]]) {
     const result=act(state,'down');
     assert.equal(result.score,50+points);
     assert.equal(result.lines,9+count);
-    assert.equal(result.level,2);
+    assert.equal(result.level,1);
     assert.equal(result.highScore,50+points);
     assert.equal(state.score,50);
   });
 }
-test('score table, level thresholds and speed floor', () => {
+test('score table, score-based level thresholds and five-percent speed scaling', () => {
   assert.deepEqual([0,1,2,3,4].map(n=>lineScore(n,3)),[0,300,900,1500,2400]);
-  assert.deepEqual([0,9,10,19,20].map(levelForLines),[1,1,2,2,3]);
-  assert.deepEqual([1,2,12,13,100].map(gravityInterval),[800,740,140,100,100]);
+  assert.deepEqual([0,19999,20000,39999,40000,60000].map(levelForScore),[1,1,2,2,3,4]);
+  assert.deepEqual([1,2,3,4,5,44,100].map(gravityInterval),[800,762,726,691,658,100,100]);
+});
+test('a clear is scored at the old level before the score threshold changes gravity', () => {
+  const state=createGame();
+  state.current={...rotatePiece(spawnPiece('I')),x:2,y:16};
+  state.board[19].fill('O'); state.board[19][4]=null;
+  state.score=19900;
+  const result=act(state,'down');
+  assert.equal(result.score,20000);
+  assert.equal(result.level,2);
+  assert.equal(gravityInterval(result.level),762);
+  assert.equal(state.level,1);
 });
 test('gravity accumulates time, pause freezes it and resume uses remaining time', () => {
   let state=advance(createGame(),799);

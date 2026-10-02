@@ -46,8 +46,20 @@ The user completed the Phase 2 browser review on 2026-10-02 and accepted the res
 | Decision | Reason / behavior |
 | --- | --- |
 | Prioritize phone portrait play | The user expects to play mainly on a phone; keep the full board and controls visible together on common short screens |
-| Add pointer-based left/right/soft-drop holds and single-press rotate/hard-drop | Supports touch without changing pure game rules or adding dependencies |
+| Add pointer-based left/right holds and single-press hard-drop/rotate | Current phone button order is left, right, hard drop, rotate; soft drop is available on the keyboard |
 | Pause on coarse-pointer startup and when the page becomes hidden | Gives the player time to get ready and prevents unattended play after switching apps |
 | Confirm restart from touch devices | Reduces accidental loss of a phone game |
 
-Implementation is browser-viewport checked. Physical-phone acceptance remains pending.
+The latest phone layout is published in commit `014ed694`. The user reviewed the game on two phones and confirmed Phase 4 is settled on 2026-10-02; Phase 4 is accepted.
+
+## Phase 5 — approved 2026-10-03
+
+| Decision | Reason / behavior |
+| --- | --- |
+| Raise level every 20,000 points; accelerate gravity by 5% per level | Uses the existing line-clear score table; start at 800 ms per cell and cap speed at 100 ms per cell |
+| Keep one page-session top-three name board | Names are trimmed, limited to 10 Unicode code points and clear on refresh; same name keeps its best score and ties preserve earlier entries |
+| Keep numeric high score separately in local storage | The requested name board is temporary while the existing high-score behavior stays intact |
+| Synthesize a quiet 80 BPM electronic loop with Web Audio | No external audio files or dependencies; music toggle defaults on, and playback stops on pause, backgrounding and game over |
+| Use the exact title `Baozi Blocks` | Keep the phone header short and consistent with the browser tab title |
+
+The approved behavior is implemented. See `PHASE5_PLAN.md` for the original proposal and `TEST_PLAN.md` for checks and remaining physical-phone acceptance.

@@ -1,13 +1,14 @@
 # Project State
 
-- **Phase:** Phases 0–3 complete. Phase 4 phone-play improvements are in progress.
+- **Phase:** Phases 0–4 complete. Phase 5 is implemented and published; real-phone audio and play acceptance is pending.
 - **Current state:** Dependency-free ES-module game with pure rules in `src/game/`, Canvas rendering/storage in `src/ui/`, and keyboard/pointer controls in `src/main.js`.
 - **Implemented:** Seven tetrominoes and 7-bag, automatic/soft/hard drop, movement/rotation/kicks, collision and immediate locking, clears/score/levels/speed, Next, game over, pause/resume, restart, guarded local high score, responsive desktop layout and controls, and phone touch controls.
-- **Git:** `main` tracks `origin/main`. The local and remote `main` point to baseline commit `2e3551f0cdcc2379b711b2e5d8e13c94dea45352` (`Complete playable falling blocks MVP and UX polish`).
+- **Git:** `main` tracks `origin/main`. Latest program commit: `014ed6947350211767193aa715196ef9cb950af8` (`Expand mobile game viewport and frame stats`), pushed and independently verified through the GitHub plugin on 2026-10-02.
 - **Deployment:** Public GitHub Pages site at <https://tszstone-star.github.io/falling-blocks-game/>. Source is `main` at `/`; HTTPS enforcement is enabled. The Pages build for the baseline commit completed successfully on 2026-10-02.
-- **Automated validation:** `npm test` passed 19/19 on 2026-10-02. JavaScript syntax, module references and static asset paths were also checked before deployment.
+- **Automated validation:** `npm test` passed 28/28 after Phase 5 changes on 2026-10-03. JavaScript syntax, module references and static asset paths were also checked before deployment.
 - **Phase 1 acceptance:** The user completed an independent real-browser play check on 2026-10-02 and reported that Phase 1 works without problems.
 - **Phase 2 acceptance:** The user completed the browser review on 2026-10-02. UX and accessibility changes are recorded in `docs/TEST_PLAN.md`.
 - **Phase 3 public acceptance:** On 2026-10-02, the published page loaded its styling, ES module and Canvas; movement, soft drop, rotation, hard drop, pause/resume, restart and Next were exercised. A line clear produced score 100 and line count 1; High score 100 remained after refresh. At a 375px viewport, document width stayed 375px and the board remained 1:2. No Console errors were observed.
-- **Phase 4 progress:** Phone-first controls and portrait layout are implemented locally. Browser viewport checks at 375×812 and 320×568 fit without page overflow; `npm test` passes 19/19. Physical-phone play and public update remain pending.
-- **Next step:** Complete a real-phone play check on the updated Pages site, adjust any issues found, and then close Phase 4.
+- **Phase 4 acceptance:** The phone layout is published. Latest responsive checks at 390×844 and 375×667 show a larger board, framed stats and controls near the bottom. The user reviewed the game on two phones and confirmed Phase 4 is settled on 2026-10-02; Phase 4 is complete.
+- **Phase 5 implementation:** Score-based levels every 20,000 points, 5% faster gravity per level with a 100 ms floor, a page-session top-three name board, synthesized background music, and the `Baozi Blocks` title are implemented. At 375×667, the game-over form, leaderboard and touch controls fit; scores survive restart and clear after refresh. Physical-phone music/play review remains.
+- **Next step:** Try the published Phase 5 version on the two phones, especially name entry with the keyboard open and music volume/pause/resume. Record any adjustments in `docs/TEST_PLAN.md`.

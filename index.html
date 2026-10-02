@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BAOZI-FALLING BLOCKS</title>
-  <link rel="stylesheet" href="./css/style.css?v=phone-layout-4">
+  <title>Baozi Blocks</title>
+  <link rel="stylesheet" href="./css/style.css?v=phase5">
 </head>
 <body>
   <main>
     <header class="page-header">
       <div class="page-header-row">
-        <h1><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>BAOZI-FALLING BLOCKS</span></h1>
+        <h1><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Baozi Blocks</span></h1>
         <div class="buttons" aria-label="Game actions">
           <button id="pause" type="button" aria-keyshortcuts="P"><span id="pause-icon" class="mobile-action-icon" aria-hidden="true">Ⅱ</span><span id="pause-label" class="desktop-label">Pause</span><span id="pause-mobile-label" class="mobile-label">暂停</span> <kbd>P</kbd></button>
           <button id="restart" type="button" aria-keyshortcuts="R"><span class="mobile-action-icon" aria-hidden="true">↻</span><span class="desktop-label">Restart</span><span class="mobile-label">重开</span> <kbd>R</kbd></button>
+          <button id="music-toggle" type="button" aria-pressed="true" aria-label="关闭背景音乐" title="关闭背景音乐"><span id="music-icon" class="mobile-action-icon" aria-hidden="true">♫</span><span id="music-label" class="desktop-label">Music on</span></button>
         </div>
       </div>
       <p>Clear lines, build your score, and keep the stack low.</p>
@@ -25,6 +26,24 @@
           <canvas id="game-board" role="img" aria-label="Falling blocks playfield, 10 columns by 20 rows" aria-describedby="playfield-description game-status control-help">Canvas support is required to play.</canvas>
           <p id="playfield-description" class="visually-hidden"></p>
           <div id="board-overlay" class="board-overlay" aria-hidden="true" hidden></div>
+          <div id="level-notice" class="level-notice" aria-live="polite" hidden></div>
+          <section id="score-entry" class="score-entry" aria-labelledby="score-entry-heading" hidden>
+            <h2 id="score-entry-heading">GAME OVER</h2>
+            <p id="round-summary" class="round-summary"></p>
+            <form id="score-form">
+              <label for="player-name">输入名字（最多 10 个字）</label>
+              <div class="score-form-row">
+                <input id="player-name" name="player-name" type="text" maxlength="20" autocomplete="nickname" required>
+                <button id="save-score" type="submit">保存成绩</button>
+              </div>
+            </form>
+            <p id="score-message" class="score-message" role="status" aria-live="polite"></p>
+            <div class="leaderboard-panel">
+              <h3>本页前三名</h3>
+              <ol id="leaderboard-list"></ol>
+            </div>
+            <button id="game-over-restart" type="button">再来一局</button>
+          </section>
           <button id="mobile-start" class="mobile-start" type="button" hidden>点击开始</button>
         </div>
       </section>
@@ -70,6 +89,6 @@
     </div>
     <noscript><p class="noscript-message">JavaScript is required to play.</p></noscript>
   </main>
-  <script type="module" src="./src/main.js?v=phone-layout-4"></script>
+  <script type="module" src="./src/main.js?v=phase5"></script>
 </body>
 </html>
