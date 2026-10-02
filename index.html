@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Falling Blocks Game</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <main>
+    <header class="page-header">
+      <h1>Falling Blocks</h1>
+      <p>Clear lines, build your score, and keep the stack low.</p>
+    </header>
+    <div class="game-layout">
+      <section class="playfield-column" aria-label="Game playfield">
+        <h2 class="section-heading">Playfield <span>10 × 20</span></h2>
+        <div class="board-frame" id="board-frame" data-state="playing">
+          <canvas id="game-board" role="img" aria-label="Falling blocks playfield, 10 columns by 20 rows" aria-describedby="playfield-description game-status control-help">Canvas support is required to play.</canvas>
+          <p id="playfield-description" class="visually-hidden"></p>
+          <div id="board-overlay" class="board-overlay" aria-hidden="true" hidden></div>
+        </div>
+      </section>
+      <aside class="sidebar" aria-label="Game information and controls">
+        <section id="status-panel" class="status-panel" data-state="playing" aria-label="Game status">
+          <span class="eyebrow">STATUS</span>
+          <p id="game-status" data-state="playing" role="status" aria-live="polite" aria-atomic="true">Loading game…</p>
+        </section>
+        <dl class="stats" aria-label="Game statistics">
+          <div class="stat stat-score"><dt>Score</dt><dd id="score">0</dd></div>
+          <div class="stat stat-level"><dt>Level</dt><dd id="level">1</dd></div>
+          <div class="stat stat-lines"><dt>Lines</dt><dd id="lines">0</dd></div>
+          <div class="stat stat-high-score"><dt>High score</dt><dd id="highScore">0</dd></div>
+        </dl>
+        <section class="next-panel" aria-labelledby="next-heading">
+          <div>
+            <h2 id="next-heading">Next piece</h2>
+            <p>Coming up</p>
+          </div>
+          <canvas id="next-piece" role="img" aria-label="Next piece preview"></canvas>
+        </section>
+        <div class="buttons" aria-label="Game actions">
+          <button id="pause" type="button" aria-keyshortcuts="P"><span id="pause-label">Pause</span> <kbd>P</kbd></button>
+          <button id="restart" type="button" aria-keyshortcuts="R"><span>Restart</span> <kbd>R</kbd></button>
+        </div>
+        <section class="controls-panel" aria-labelledby="controls-heading">
+          <h2 id="controls-heading">Keyboard controls</h2>
+          <p id="control-help" class="controls-intro">Shortcuts work while the game page is active.</p>
+          <ul class="controls-list">
+            <li><span><kbd>←</kbd> <kbd>→</kbd></span><span>Move</span></li>
+            <li><span><kbd>↓</kbd></span><span>Soft drop</span></li>
+            <li><span><kbd>↑</kbd></span><span>Rotate clockwise</span></li>
+            <li><span><kbd>Space</kbd></span><span>Hard drop</span></li>
+            <li><span><kbd>P</kbd></span><span>Pause / resume</span></li>
+            <li><span><kbd>R</kbd></span><span>Restart</span></li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+    <noscript><p class="noscript-message">JavaScript is required to play.</p></noscript>
+  </main>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
