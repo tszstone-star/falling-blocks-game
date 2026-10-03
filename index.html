@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Baozi Blocks</title>
-  <link rel="stylesheet" href="./css/style.css?v=phase7">
+  <link rel="stylesheet" href="./css/style.css?v=phase7-side-tools">
 </head>
 <body>
   <main>
@@ -24,18 +24,18 @@
       <section class="playfield-column" aria-label="Game playfield">
         <h2 class="section-heading">
           <span class="playfield-title">Playfield <small>10 × 20</small></span>
-          <span class="board-tools">
-            <label class="ghost-setting">
-              <span>落点影子</span>
-              <span class="ghost-switch-shell">
-                <input id="ghost-toggle" type="checkbox" role="switch" aria-describedby="ghost-state">
-                <span class="ghost-switch" aria-hidden="true"></span>
-              </span>
-              <span id="ghost-state">关</span>
-            </label>
-            <button id="help-toggle" class="help-toggle" type="button" aria-label="打开玩法说明" aria-haspopup="dialog" aria-controls="help-dialog" title="玩法说明">?</button>
-          </span>
         </h2>
+        <span class="board-tools" role="group" aria-label="游戏辅助选项">
+          <label class="ghost-setting">
+            <span class="visually-hidden">落点影子</span>
+            <span class="ghost-switch-shell">
+              <input id="ghost-toggle" type="checkbox" role="switch" aria-describedby="ghost-state">
+              <span class="ghost-switch" aria-hidden="true"></span>
+            </span>
+            <span id="ghost-state">关</span>
+          </label>
+          <button id="help-toggle" class="help-toggle" type="button" aria-label="打开玩法说明" aria-haspopup="dialog" aria-controls="help-dialog" title="玩法说明">?</button>
+        </span>
         <div class="board-frame" id="board-frame" data-state="playing">
           <canvas id="game-board" role="img" aria-label="Falling blocks playfield, 10 columns by 20 rows" aria-describedby="playfield-description game-status control-help">Canvas support is required to play.</canvas>
           <p id="playfield-description" class="visually-hidden"></p>
@@ -129,7 +129,7 @@
         <li><strong>落底：</strong>立即放下当前方块；电脑按空格键。</li>
         <li><strong>暂存：</strong>先保存当前方块并换出另一个；当前方块落定前只能暂存一次。</li>
       </ul>
-      <p class="help-note">棋盘上方的“落点影子”开关可显示或隐藏预计落点。</p>
+      <p class="help-note">棋盘旁的“落点影子”开关可显示或隐藏预计落点。</p>
       <button id="help-done" class="help-done" type="button">知道了</button>
     </dialog>
     <noscript><p class="noscript-message">JavaScript is required to play.</p></noscript>
