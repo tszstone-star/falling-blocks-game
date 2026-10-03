@@ -9,7 +9,7 @@
 | 4 — Phone-first play | Add touch controls, compact portrait layout, safe start/restart and background pause | Controls work on touch; board and controls fit common portrait screens; physical-phone review passes; project records updated |
 | 5 — Difficulty, arcade scores and music | Score-based levels, page-session top three names, calm electronic music, Baozi Blocks title | Implemented, tested and published; real-phone name-entry and audio acceptance pending |
 | 6 — Core feel and difficulty model | Lines-based levels, fixed clear scoring, exponential gravity, Ghost, Lock Delay, Hold, SRS, effects and round statistics | Published and reviewed by the user on two phones; Phase 7 addresses the resulting comfort and audio feedback |
-| 7 — Phone comfort and onboarding | Optional Ghost switch, gentler starting speed, lighter palette, clearer synthesized audio and a quick-start guide | Automated tests pass; check the final phone layout and audio on physical devices before public acceptance |
+| 7 — Phone comfort and onboarding | Optional Ghost switch, gentler starting speed, lighter palette, clearer synthesized audio and a quick-start guide | Published after automated and phone-viewport checks; physical-phone audio and comfort review remains |
 
 Phase 0 is complete. Phase 1 was accepted after the user's independent real-browser play check on 2026-10-02. Phase 2 is complete: its clarity, layout, control feedback and accessibility changes passed the user's browser review on 2026-10-02. Phase 3 is complete: GitHub Pages publishes the root of `main` at https://tszstone-star.github.io/falling-blocks-game/; public acceptance results are recorded in `TEST_PLAN.md`.
 
