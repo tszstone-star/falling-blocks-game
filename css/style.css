@@ -157,16 +157,16 @@ kbd { display: inline-block; min-width: 26px; padding: 2px 6px; border: 1px soli
   .next-panel p { display: none; }
   #next-piece { width: 46px; height: 46px; }
   #hold-piece { width: 46px; height: 46px; }
-  .playfield-column { display: grid; order: 2; width: 100%; grid-template-columns: minmax(0, 1fr) 36px; grid-template-rows: max-content; column-gap: 8px; margin: 0 auto; }
+  .playfield-column { display: grid; order: 2; width: 100%; grid-template-columns: 32px minmax(0, 1fr) 32px; grid-template-rows: max-content; column-gap: 4px; margin: 0 auto; }
   .section-heading { display: none; }
   .playfield-title { display: none; }
-  .board-tools { width: 36px; grid-column: 2; grid-row: 1; flex-direction: column; justify-content: flex-start; gap: 8px; padding-top: 10px; }
+  .board-tools { width: 32px; grid-column: 3; grid-row: 1; flex-direction: column; justify-content: flex-start; gap: 8px; padding-top: 10px; }
   .ghost-setting { flex-direction: column; justify-content: center; gap: 3px; font-size: .72rem; }
   .ghost-switch-shell { width: 32px; height: 20px; flex-basis: 32px; }
   .ghost-switch::after { top: 2px; left: 2px; width: 14px; height: 14px; }
   .ghost-switch-shell input:checked + .ghost-switch::after { transform: translateX(12px); }
   #ghost-state { min-width: 0; font-size: .62rem; line-height: 1; }
-  .board-frame { width: min(100%, 340px); grid-column: 1; grid-row: 1; justify-self: end; margin: 0; }
+  .board-frame { width: min(100%, 340px); grid-column: 2; grid-row: 1; justify-self: center; margin: 0; }
   .touch-controls { order: 3; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; width: min(100%, 420px); margin: 0 auto; touch-action: none; }
   .touch-controls button { display: grid; align-content: center; justify-items: center; gap: 0; min-width: 0; min-height: 56px; padding: 3px 1px; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
   .touch-controls button > span { font-size: 1.1rem; line-height: 1.1; }
@@ -185,7 +185,7 @@ kbd { display: inline-block; min-width: 26px; padding: 2px 6px; border: 1px soli
   body { display: flex; height: 100vh; height: 100dvh; flex-direction: column; overflow: hidden; }
   main { display: flex; width: min(100%, 680px); min-height: 0; flex: 1; flex-direction: column; }
   .game-layout { min-height: 0; flex: 1; }
-  .playfield-column { display: grid; min-height: 0; flex: 1; grid-template-columns: minmax(0, 1fr) 36px; grid-template-rows: max-content; align-content: center; justify-content: center; }
+  .playfield-column { display: grid; min-height: 0; flex: 1; grid-template-columns: 32px minmax(0, 1fr) 32px; grid-template-rows: max-content; align-content: center; justify-content: center; }
   .board-frame { width: min(100%, 340px, calc((100vh - 202px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) / 2)); width: min(100%, 340px, calc((100dvh - 202px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) / 2)); }
 }
 
@@ -206,6 +206,11 @@ kbd { display: inline-block; min-width: 26px; padding: 2px 6px; border: 1px soli
   .stats { gap: 6px; }
   .next-panel, .hold-panel { width: 58px; min-width: 58px; }
   #next-piece, #hold-piece { width: 42px; height: 42px; }
+  .playfield-column { grid-template-columns: 24px minmax(0, 1fr) 24px; column-gap: 4px; }
+  .board-tools { width: 24px; }
+  .ghost-switch-shell { width: 24px; flex-basis: 24px; }
+  .ghost-switch-shell input:checked + .ghost-switch::after { transform: translateX(4px); }
+  #help-toggle { width: 24px; min-width: 24px; min-height: 24px; height: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
