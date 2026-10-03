@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createBoard } from '../src/game/board.js';
-import { MAX_LOCK_RESETS, LOCK_DELAY_MS } from '../src/game/config.js';
+import { MAX_LOCK_RESETS, LOCK_DELAY_MS, START_GRAVITY_INTERVAL_MS } from '../src/game/config.js';
 import { act, advance, createGame, isGrounded } from '../src/game/game.js';
 import { spawnPiece } from '../src/game/pieces.js';
 
@@ -51,7 +51,7 @@ test('leaving a ledge cancels the timer and landing starts a fresh delay without
   assert.equal(isGrounded(state.board, state.current), false);
   assert.equal(state.groundedMs, 0);
   assert.equal(state.lockResets, 3);
-  state = advance(state, 800);
+  state = advance(state, START_GRAVITY_INTERVAL_MS);
   assert.equal(state.current.y, 18);
   assert.equal(isGrounded(state.board, state.current), true);
   assert.equal(state.groundedMs, 0);

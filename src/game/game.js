@@ -1,6 +1,6 @@
 import { createBoard, canPlace, placePiece, clearLines } from './board.js';
 import { createBag, spawnPiece, rotatePiece, srsKicks } from './pieces.js';
-import { LINES_PER_LEVEL, START_GRAVITY_INTERVAL_MS, LEVEL_SPEED_MULTIPLIER, MIN_GRAVITY_INTERVAL_MS, LOCK_DELAY_MS, MAX_LOCK_RESETS } from './config.js';
+import { LINES_PER_LEVEL, START_GRAVITY_INTERVAL_MS, LEVEL_SPEED_MULTIPLIER, MIN_GRAVITY_INTERVAL_MS, LOCK_DELAY_MS, MAX_LOCK_RESETS } from './config.js?v=phase7';
 
 export const levelForLines = lines => 1 + Math.floor(lines / LINES_PER_LEVEL);
 export const gravityInterval = level => Math.max(MIN_GRAVITY_INTERVAL_MS, Math.round(START_GRAVITY_INTERVAL_MS / LEVEL_SPEED_MULTIPLIER ** (level - 1)));
@@ -64,8 +64,12 @@ function hold(state, random) {
     next = drawn.type;
     bag = drawn.bag;
   }
+  const gameOver = !canPlace(state.board, current);
+  const events = ['hold'];
+  if (gameOver) events.push('game-over');
   return { ...state, current, next, bag, holdPiece: heldType, holdUsedThisTurn: true,
-    elapsed: 0, groundedMs: 0, lockResets: 0, gameOver: !canPlace(state.board, current) };
+    elapsed: 0, groundedMs: 0, lockResets: 0, gameOver,
+    eventId: state.eventId + events.length, events };
 }
 
 function movePiece(state, candidate, resetLock = true) {
@@ -99,7 +103,10 @@ export function act(state, action, random = Math.random) {
     if (rotated === piece) return state;
     for (const [dx, dy] of srsKicks(piece.type, piece.rotation ?? 0, rotated.rotation)) {
       const kicked = { ...rotated, x: piece.x + dx, y: piece.y + dy };
-      if (canPlace(state.board, kicked)) return movePiece(state, kicked);
+      if (canPlace(state.board, kicked)) {
+        const result = movePiece(state, kicked);
+        return { ...result, eventId: state.eventId + 1, events: ['rotate'] };
+      }
     }
     return state;
   }

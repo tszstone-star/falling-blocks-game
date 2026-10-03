@@ -20,6 +20,8 @@ test('SRS rotates clockwise and kicks an I piece at both side walls and a T off 
   assert.equal(rotated.current.x, 0);
   assert.equal(rotated.current.rotation, 2);
   assert.equal(canPlace(rotated.board, rotated.current), true);
+  assert.deepEqual(rotated.events, ['rotate']);
+  assert.equal(rotated.eventId, left.eventId + 1);
   const right = {...initial,current:{...vertical,x:7,y:3}};
   const rightRotated = act(right,'rotate');
   assert.equal(rightRotated.current.x, 6);

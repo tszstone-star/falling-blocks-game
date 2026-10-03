@@ -78,3 +78,16 @@ The approved behavior is implemented. See `PHASE5_PLAN.md` for the original prop
 | Track active Play Time and four-line clears for the current round only | Show arcade-style results without persisting additional personal data |
 
 Implementation and automated coverage are recorded in `docs/TEST_PLAN.md`; after publication the user should review touch feel and speaker volume on-device.
+
+## Phase 7 — approved 2026-10-03
+
+| Decision | Reason / behavior |
+| --- | --- |
+| Ghost is controlled by a board-header switch and defaults off on page load | Preserve access to landing guidance without keeping the visual distraction always on |
+| Start gravity at 900 ms per cell; retain the 6% level curve and 100 ms floor | Ease the opening while preserving the approved later difficulty model |
+| Use a brighter blue-gray theme and framed Score, Lines and Level values | Reduce visual strain and make the phone dashboard easier to scan |
+| Enrich the existing synthesized loop and raise distinct game-effect cues, including Rotate and Hold | Improve audibility and atmosphere without adding files or dependencies |
+| Add a reopenable short guide for touch and keyboard controls, Hold and Ghost | Make first-session controls easier to learn on a phone |
+| Keep the session top three and game-over name-saving behavior unchanged | Preserve the behavior the user confirmed during phone review |
+
+Phase 7 automated and layout checks are recorded in `docs/TEST_PLAN.md`; physical-phone audio and comfort review remains with the user.

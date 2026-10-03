@@ -29,8 +29,10 @@ test('sound effects schedule gentle synthesized notes and can be disabled', () =
   const sound = createSoundEffects(target);
   assert.equal(sound.isEnabled(), true);
   assert.equal(sound.play('lock'), true);
+  assert.equal(sound.play('rotate'), true);
+  assert.equal(sound.play('hold'), true);
   assert.equal(sound.play('tetris'), true);
-  assert.equal(oscillators.length, 5);
+  assert.equal(oscillators.length, 8);
   assert.ok(oscillators.every(node => node.starts.length === 1));
   assert.equal(sound.setEnabled(false), false);
   assert.equal(sound.play('line-clear'), false);

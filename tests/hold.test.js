@@ -14,6 +14,8 @@ test('empty hold stores current, promotes Next, and draws one new preview', () =
   assert.notEqual(held.next, next);
   assert.equal(held.bag.length, bagLength - 1);
   assert.equal(held.holdUsedThisTurn, true);
+  assert.deepEqual(held.events, ['hold']);
+  assert.equal(held.eventId, state.eventId + 1);
   assert.equal(act(held, 'hold'), held, 'a piece can only be held once per turn');
 });
 
@@ -29,6 +31,7 @@ test('swap hold resets both pieces and does not consume Next or bag', () => {
   assert.equal(swapped.current.y, 0);
   assert.equal(swapped.next, next);
   assert.deepEqual(swapped.bag, bag);
+  assert.deepEqual(swapped.events, ['hold']);
 });
 
 test('hold becomes available after locking and restart clears held state', () => {

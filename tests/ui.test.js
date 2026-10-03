@@ -6,15 +6,17 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
   const elements = new Map();
   const events = new Map();
   const frames = [];
-  const makeElement = tagName => ({ tagName, textContent: '', context: { draws: [], fillRect(...args) { this.draws.push(args); }, strokeRect() {}, clearRect() {} }, attributes: {}, handlers: {}, dataset: {}, children: [], hidden: false, disabled: false,
+  const makeElement = tagName => ({ tagName, textContent: '', context: { draws: [], globalAlpha: 1, fillRect(...args) { this.draws.push({ args, alpha: this.globalAlpha }); }, strokeRect() {}, clearRect() {} }, attributes: {}, handlers: {}, dataset: {}, children: [], hidden: false, disabled: false, checked: false,
     getContext() { return this.context; },
     setAttribute(key, value) { this.attributes[key] = value; },
     addEventListener(key, handler) { this.handlers[key] = handler; },
+    showModal() { this.open = true; },
+    close() { this.open = false; this.handlers.close?.(); },
     setPointerCapture() {}, append(...children) { this.children.push(...children); }, replaceChildren(...children) { this.children = children; },
     focus() { this.focused = true; }, matches(selector) { return selector.startsWith('input') && this.tagName === 'INPUT'; },
   });
-  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'level-notice', 'line-clear-notice', 'score-entry', 'round-summary', 'final-score', 'final-level', 'final-lines', 'final-play-time', 'final-tetris-count', 'score-form', 'player-name', 'save-score', 'score-message', 'leaderboard-list', 'game-over-restart', 'mobile-start', 'touch-controls', 'status-panel', 'pause-label', 'pause-mobile-label', 'pause-icon', 'music-toggle', 'music-icon', 'music-label', 'sound-toggle', 'sound-icon', 'sound-label', 'next-piece', 'hold-piece', 'hold-action', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
-    elements.set(id, makeElement(id === 'player-name' ? 'INPUT' : id === 'score-form' ? 'FORM' : 'DIV'));
+  for (const id of ['game-board', 'playfield-description', 'board-frame', 'board-overlay', 'level-notice', 'line-clear-notice', 'score-entry', 'round-summary', 'final-score', 'final-level', 'final-lines', 'final-play-time', 'final-tetris-count', 'score-form', 'player-name', 'save-score', 'score-message', 'leaderboard-list', 'game-over-restart', 'mobile-start', 'touch-controls', 'status-panel', 'pause-label', 'pause-mobile-label', 'pause-icon', 'music-toggle', 'music-icon', 'music-label', 'sound-toggle', 'sound-icon', 'sound-label', 'ghost-toggle', 'ghost-state', 'help-toggle', 'help-dialog', 'help-close', 'help-done', 'next-piece', 'hold-piece', 'hold-action', 'score', 'level', 'lines', 'highScore', 'game-status', 'pause', 'restart']) {
+    elements.set(id, makeElement(id === 'player-name' ? 'INPUT' : id === 'score-form' ? 'FORM' : id === 'help-dialog' ? 'DIALOG' : 'DIV'));
   }
   const element = id => elements.get(id);
   const touchButtons = ['left', 'right', 'hold', 'drop', 'rotate'].map(action => ({ handlers: {}, dataset: { action }, addEventListener(key, handler) { this.handlers[key] = handler; }, setPointerCapture() {} }));
@@ -39,6 +41,9 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     assert.equal(element('game-board').height, 600);
     assert.ok(element('game-board').context.draws.length >= 5);
     assert.equal(element('mobile-start').hidden, false);
+    assert.equal(element('ghost-toggle').checked, false);
+    assert.equal(element('ghost-state').textContent, '关');
+    assert.equal(element('game-board').context.draws.some(draw => draw.alpha < 1), false, 'Ghost starts hidden');
     assert.equal(element('music-toggle').attributes['aria-pressed'], 'true');
     element('music-toggle').handlers.click();
     assert.equal(element('music-toggle').attributes['aria-pressed'], 'false');
@@ -55,6 +60,28 @@ test('entry wires Canvas, keyboard, touch holds, pause/restart, game over and un
     assert.match(element('next-piece').attributes['aria-label'], /^Next piece: [IOTSZJL]$/);
     assert.match(element('hold-piece').attributes['aria-label'], /^Hold piece: empty$/);
     assert.equal(element('board-overlay').hidden, true);
+    element('game-board').context.draws.length = 0;
+    element('ghost-toggle').checked = true;
+    element('ghost-toggle').handlers.change({ currentTarget: element('ghost-toggle') });
+    assert.equal(element('ghost-state').textContent, '开');
+    assert.equal(element('ghost-toggle').attributes['aria-label'], '隐藏落点影子');
+    assert.ok(element('game-board').context.draws.some(draw => draw.alpha < 1), 'enabled Ghost uses a translucent landing piece');
+    element('game-board').context.draws.length = 0;
+    element('ghost-toggle').checked = false;
+    element('ghost-toggle').handlers.change({ currentTarget: element('ghost-toggle') });
+    assert.equal(element('ghost-state').textContent, '关');
+    assert.equal(element('game-board').context.draws.some(draw => draw.alpha < 1), false, 'disabled Ghost is not drawn');
+    element('help-toggle').handlers.click();
+    assert.equal(element('help-dialog').open, true);
+    assert.match(element('game-status').textContent, /^Paused/);
+    let helpKeyPrevented = false;
+    const helpPosition = element('playfield-description').textContent;
+    events.get('keydown')({ key: 'ArrowLeft', preventDefault() { helpKeyPrevented = true; } });
+    assert.equal(helpKeyPrevented, false);
+    assert.equal(element('playfield-description').textContent, helpPosition, 'game shortcuts are ignored while the guide is open');
+    element('help-done').handlers.click();
+    assert.equal(element('help-dialog').open, false);
+    assert.match(element('game-status').textContent, /^Playing/);
     assert.match(element('playfield-description').textContent, /^Current [IOTSZJL] piece, row \d+, column \d+\. Next piece [IOTSZJL]\.$/);
     const columnBeforeTouch = Number(/column (\d+)/.exec(element('playfield-description').textContent)[1]);
     const pointer = (button, eventName) => button.handlers[eventName]({ pointerId: 1, button: 0, preventDefault() {} });
@@ -154,6 +181,11 @@ test('page markup and styles keep the accessible responsive MVP shell', () => {
   assert.match(html, /<kbd>C<\/kbd>[\s\S]*Hold piece/);
   assert.doesNotMatch(html, /data-action="down"/);
   assert.match(html, /id="mobile-start"/);
+  assert.match(html, /id="ghost-toggle"[^>]*type="checkbox" role="switch"/);
+  assert.match(html, /id="ghost-state">关</);
+  assert.match(html, /id="help-dialog"/);
+  assert.match(html, /快速上手/);
+  assert.match(html, /暂存可换出当前方块/);
   assert.match(html, /id="music-toggle"[^>]*aria-pressed="true"/);
   assert.match(html, /id="sound-toggle"[^>]*aria-pressed="true"/);
   assert.match(html, /id="line-clear-notice"/);
@@ -168,6 +200,8 @@ test('page markup and styles keep the accessible responsive MVP shell', () => {
   assert.match(css, /aspect-ratio:\s*1\s*\/\s*2/);
   assert.match(css, /@media\s*\(max-width:\s*620px\)/);
   assert.match(css, /height:\s*100dvh/);
+  assert.match(css, /color-scheme:\s*light/);
+  assert.match(css, /background:\s*#e8eef4/);
   assert.match(css, /main\s*\{[^}]*flex:\s*1/);
   assert.match(css, /\.playfield-column\s*\{[^}]*flex:\s*1/);
   assert.match(css, /\.stat\s*\{[^}]*padding:\s*5px 6px/);

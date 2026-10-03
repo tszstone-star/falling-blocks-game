@@ -1,24 +1,29 @@
 const EFFECTS = {
-  lock: [{ frequency: 196, duration: 0.055, wave: 'triangle', volume: 0.16 }],
+  rotate: [{ frequency: 740, duration: 0.055, wave: 'triangle', volume: 0.22 }],
+  hold: [
+    { frequency: 440, duration: 0.07, wave: 'triangle', volume: 0.25 },
+    { frequency: 659.25, duration: 0.11, wave: 'sine', volume: 0.24 },
+  ],
+  lock: [{ frequency: 164.81, duration: 0.08, wave: 'triangle', volume: 0.28 }],
   'line-clear': [
-    { frequency: 523.25, duration: 0.075, wave: 'sine', volume: 0.19 },
-    { frequency: 659.25, duration: 0.11, wave: 'sine', volume: 0.18 },
+    { frequency: 659.25, duration: 0.08, wave: 'sine', volume: 0.27 },
+    { frequency: 880, duration: 0.13, wave: 'triangle', volume: 0.29 },
   ],
   tetris: [
-    { frequency: 523.25, duration: 0.07, wave: 'sine', volume: 0.2 },
-    { frequency: 659.25, duration: 0.07, wave: 'sine', volume: 0.2 },
-    { frequency: 783.99, duration: 0.08, wave: 'sine', volume: 0.2 },
-    { frequency: 1046.5, duration: 0.18, wave: 'sine', volume: 0.2 },
+    { frequency: 523.25, duration: 0.07, wave: 'triangle', volume: 0.26 },
+    { frequency: 659.25, duration: 0.07, wave: 'triangle', volume: 0.27 },
+    { frequency: 783.99, duration: 0.08, wave: 'triangle', volume: 0.28 },
+    { frequency: 1046.5, duration: 0.18, wave: 'sine', volume: 0.3 },
   ],
   'level-up': [
-    { frequency: 392, duration: 0.08, wave: 'sine', volume: 0.18 },
-    { frequency: 523.25, duration: 0.08, wave: 'sine', volume: 0.18 },
-    { frequency: 659.25, duration: 0.16, wave: 'sine', volume: 0.18 },
+    { frequency: 392, duration: 0.08, wave: 'triangle', volume: 0.25 },
+    { frequency: 523.25, duration: 0.08, wave: 'triangle', volume: 0.27 },
+    { frequency: 659.25, duration: 0.16, wave: 'sine', volume: 0.29 },
   ],
   'game-over': [
-    { frequency: 329.63, duration: 0.1, wave: 'sine', volume: 0.16 },
-    { frequency: 246.94, duration: 0.13, wave: 'sine', volume: 0.15 },
-    { frequency: 196, duration: 0.22, wave: 'sine', volume: 0.14 },
+    { frequency: 329.63, duration: 0.1, wave: 'triangle', volume: 0.24 },
+    { frequency: 246.94, duration: 0.13, wave: 'triangle', volume: 0.23 },
+    { frequency: 196, duration: 0.22, wave: 'sine', volume: 0.22 },
   ],
 };
 
@@ -35,7 +40,7 @@ export function createSoundEffects(target = globalThis) {
       context ??= new AudioContextClass();
       if (!output) {
         output = context.createGain();
-        output.gain.setValueAtTime(0.12, context.currentTime);
+        output.gain.setValueAtTime(0.24, context.currentTime);
         output.connect(context.destination);
       }
       return context;
@@ -70,7 +75,7 @@ export function createSoundEffects(target = globalThis) {
         oscillator.type = note.wave;
         oscillator.frequency.setValueAtTime(note.frequency, when);
         envelope.gain.setValueAtTime(0.0001, when);
-        envelope.gain.linearRampToValueAtTime(note.volume, when + 0.012);
+        envelope.gain.linearRampToValueAtTime(note.volume, when + 0.018);
         envelope.gain.exponentialRampToValueAtTime(0.0001, when + note.duration);
         oscillator.connect(envelope);
         envelope.connect(output);

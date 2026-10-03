@@ -72,3 +72,12 @@ Phase 1 gameplay, automated validation and the user's independent browser play a
 - **Phone layout:** Hold and Next share the compact dashboard row; five touch actions fit below the board without displacing the board's priority.
 
 This phase intentionally replaces the Phase 5 rules `Level = 1 + floor(score / 20000)`, level-based score multipliers and 5% gravity growth.
+
+## Phase 7 — phone comfort and onboarding
+
+- Keep Ghost landing projection available through an accessible on/off switch above the board; it starts off each page load.
+- Slow the initial gravity interval from 800 ms to 900 ms per cell. Keep the existing 6% speed increase per level and 100 ms minimum.
+- Use a lighter blue-gray page and board palette while retaining clear piece colors and framed score, line and level cards.
+- Strengthen the synthesized electronic loop with a steady low pulse, soft chord bed and more regular melody; make game effects easier to hear and add distinct rotate and Hold cues. Keep separate Music and Sound toggles and no audio dependencies.
+- Add a short, reopenable quick-start guide for phone and keyboard controls, Hold and the Ghost switch. Keep the in-game start prompt concise.
+- Keep the existing page-session top-three name board, local high score and game-over flow unchanged.

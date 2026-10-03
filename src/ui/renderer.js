@@ -1,6 +1,6 @@
 import { CELL_SIZE_PX, BOARD_COLUMNS, BOARD_VISIBLE_ROWS } from '../game/config.js';
 import { spawnPiece } from '../game/pieces.js';
-import { projectGhost } from '../game/game.js';
+import { projectGhost } from '../game/game.js?v=phase7';
 const COLORS = { I: '#22d3ee', O: '#facc15', T: '#c084fc', S: '#4ade80', Z: '#fb7185', J: '#60a5fa', L: '#fb923c' };
 export function formatPlayTime(milliseconds) {
   const seconds = Math.max(0, Math.floor(milliseconds / 1000));
@@ -22,6 +22,8 @@ export function createRenderer(root) {
   const scoreMessage = root.getElementById('score-message');
   const musicToggle = root.getElementById('music-toggle');
   const soundToggle = root.getElementById('sound-toggle');
+  const ghostToggle = root.getElementById('ghost-toggle');
+  const ghostState = root.getElementById('ghost-state');
   let displayedEntries;
   let displayedLevel = 1;
   let levelNoticeUntil = 0;
@@ -39,7 +41,7 @@ export function createRenderer(root) {
   const holdPreview = root.getElementById('hold-piece');
   holdPreview.width = holdPreview.height = 120;
   const holdContext = holdPreview.getContext('2d');
-  return (state, entries = [], entryMessage = '', musicEnabled = true, soundEnabled = true) => {
+  return (state, entries = [], entryMessage = '', musicEnabled = true, soundEnabled = true, ghostEnabled = false) => {
     const now = Date.now();
     if (state.level > displayedLevel) levelNoticeUntil = now + 900;
     else if (state.level < displayedLevel) levelNoticeUntil = 0;
@@ -56,18 +58,20 @@ export function createRenderer(root) {
       }
     }
     const mode = state.gameOver ? 'game-over' : state.paused ? 'paused' : 'playing';
-    context.fillStyle = '#020617';
+    context.fillStyle = '#26384f';
     context.fillRect(0, 0, canvas.width, canvas.height);
     for (let y = 0; y < BOARD_VISIBLE_ROWS; y++) for (let x = 0; x < BOARD_COLUMNS; x++) {
-      context.strokeStyle = '#172033';
+      context.strokeStyle = '#465a72';
       context.strokeRect(x * CELL_SIZE_PX, y * CELL_SIZE_PX, CELL_SIZE_PX, CELL_SIZE_PX);
       if (state.board[y][x]) cell(context, x, y, state.board[y][x], CELL_SIZE_PX);
     }
     if (!state.gameOver) {
-      const ghost = projectGhost(state.board, state.current);
-      context.globalAlpha = 0.28;
-      for (const [x,y] of ghost.cells) cell(context, ghost.x + x, ghost.y + y, ghost.type, CELL_SIZE_PX);
-      context.globalAlpha = 1;
+      if (ghostEnabled) {
+        const ghost = projectGhost(state.board, state.current);
+        context.globalAlpha = 0.34;
+        for (const [x,y] of ghost.cells) cell(context, ghost.x + x, ghost.y + y, ghost.type, CELL_SIZE_PX);
+        context.globalAlpha = 1;
+      }
       for (const [x,y] of state.current.cells) cell(context, state.current.x + x, state.current.y + y, state.current.type, CELL_SIZE_PX);
     }
     if (now < lineFlashUntil && mode === 'playing') {
@@ -161,6 +165,9 @@ export function createRenderer(root) {
     soundToggle.setAttribute('title', soundEnabled ? '关闭音效' : '开启音效');
     root.getElementById('sound-icon').textContent = soundEnabled ? '◖))' : '◖';
     root.getElementById('sound-label').textContent = soundEnabled ? 'Sound on' : 'Sound off';
+    ghostToggle.checked = ghostEnabled;
+    ghostToggle.setAttribute('aria-label', ghostEnabled ? '隐藏落点影子' : '显示落点影子');
+    ghostState.textContent = ghostEnabled ? '开' : '关';
     const pauseButton = root.getElementById('pause');
     root.getElementById('pause-label').textContent = state.paused ? 'Resume' : 'Pause';
     root.getElementById('pause-mobile-label').textContent = state.paused ? '继续' : '暂停';

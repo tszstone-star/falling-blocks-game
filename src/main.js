@@ -1,20 +1,22 @@
-import { createGame, act, advance } from './game/game.js';
+import { createGame, act, advance } from './game/game.js?v=phase7';
 import { normalizePlayerName, submitScore } from './game/leaderboard.js';
-import { createRenderer } from './ui/renderer.js?v=phase6';
+import { createRenderer } from './ui/renderer.js?v=phase7';
 import { loadHighScore, saveHighScore } from './ui/storage.js';
-import { createMusic } from './ui/music.js';
-import { createSoundEffects } from './ui/sound.js';
+import { createMusic } from './ui/music.js?v=phase7';
+import { createSoundEffects } from './ui/sound.js?v=phase7';
 let storage;
 try { storage = window.localStorage; } catch { /* Storage may be disabled. */ }
 let state = createGame(loadHighScore(storage));
 let leaderboard = [];
 let scoreMessage = '';
+let ghostEnabled = false;
+let resumeAfterHelp = false;
 const music = createMusic(window);
 const sound = createSoundEffects(window);
 const touchDevice = typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
 if (touchDevice) state = act(state, 'pause');
 const render = createRenderer(document);
-function renderCurrent() { render(state, leaderboard, scoreMessage, music.isEnabled(), sound.isEnabled()); }
+function renderCurrent() { render(state, leaderboard, scoreMessage, music.isEnabled(), sound.isEnabled(), ghostEnabled); }
 function update(next) {
   const enteredGameOver = !state.gameOver && next.gameOver;
   if (next.highScore > state.highScore) saveHighScore(storage, next.highScore);
@@ -32,6 +34,7 @@ function update(next) {
   if (enteredGameOver && !touchDevice) document.getElementById('player-name').focus();
 }
 const mobileStart = document.getElementById('mobile-start');
+const helpDialog = document.getElementById('help-dialog');
 mobileStart.hidden = !touchDevice;
 mobileStart.addEventListener('click', () => {
   sound.unlock();
@@ -48,6 +51,7 @@ function restartGame() {
   if (!state.paused && !state.gameOver) music.start();
 }
 window.addEventListener('keydown', event => {
+  if (helpDialog.open) return;
   if (event.target?.matches?.('input, textarea, select, [contenteditable="true"]')) return;
   if (event.ctrlKey || event.metaKey || event.altKey) return;
   const action = controls[event.key] ?? controls[event.key.toLowerCase()];
@@ -81,6 +85,25 @@ document.getElementById('sound-toggle').addEventListener('click', () => {
   sound.unlock();
   sound.setEnabled(!sound.isEnabled());
   renderCurrent();
+});
+document.getElementById('ghost-toggle').addEventListener('change', event => {
+  ghostEnabled = event.currentTarget.checked;
+  renderCurrent();
+});
+document.getElementById('help-toggle').addEventListener('click', () => {
+  resumeAfterHelp = !state.paused && !state.gameOver;
+  if (resumeAfterHelp) update(act(state, 'pause'));
+  helpDialog.showModal();
+});
+function closeHelp() { helpDialog.close(); }
+document.getElementById('help-close').addEventListener('click', closeHelp);
+document.getElementById('help-done').addEventListener('click', closeHelp);
+helpDialog.addEventListener('close', () => {
+  if (resumeAfterHelp && state.paused && !state.gameOver) {
+    update(act(state, 'pause'));
+    music.start();
+  }
+  resumeAfterHelp = false;
 });
 document.getElementById('score-form').addEventListener('submit', event => {
   event.preventDefault();

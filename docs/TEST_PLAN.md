@@ -54,4 +54,12 @@ Browser acceptance checks 390×844 and 375×667: no horizontal overflow; board a
 
 Local browser checks passed at 390×844 and 375×667, with the five-control row at the bottom and no visible horizontal overflow. At 390×844 the board occupied about 318×637 px; at 375×667 it occupied about 231×461 px, with the controls ending 8 px above the viewport edge. The Hold control populated its preview and disabled itself until the active piece locked. Repeated hard drops opened the Game Over panel with all five statistics, name entry, top-three area and replay action visible within the 375×667 board overlay. A 1280×900 desktop view also showed the Hold/Next panels and both audio controls.
 
-Physical-phone acceptance is still needed for speaker loudness, touch comfort and on-screen keyboard behavior; viewport checks do not emulate these device properties.
+The user tested this release on two phones and reported that core play works. That review identified Ghost visibility, starting speed, brightness and audio as Phase 7 improvements; the existing on-screen name-entry flow was confirmed to work.
+
+## Phase 7 — phone comfort and onboarding
+
+- `npm test`: 48/48 passed after the Phase 7 changes. Coverage verifies the 900 ms start interval and updated level curve, Ghost off/on rendering and accessible state, guide pause/resume and shortcut handling, plus Hold/Rotate sound events.
+- `node --check` passed for all JavaScript files under `src/`; `git diff --check` reported no whitespace errors.
+- Local browser previews at 390×844 and 375×667 show the light theme, Ghost control and all five touch buttons within the viewport. The switch toggles its accessible label/state; the quick-start dialog opens, pauses an active round and resumes it when closed.
+- The music remains synthesized by Web Audio with no external assets or added dependencies. Physical-phone review should confirm the new mix and effect loudness on both speakers/headphones, that the Ghost switch is easy to use, and that the larger/lighter playfield remains comfortable during a full round.
+- The name-entry/top-three and high-score behavior remain covered by the existing suite and were not changed in this phase.
